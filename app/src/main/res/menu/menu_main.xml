@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="jesu.acondesa_servicio_al_cliente.MainActivity">
+    <item
+        android:id="@+id/action_grupo"
+        android:icon="@drawable/usergroup"
+        android:orderInCategory="1"
+        android:title="@string/action_campana"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_campana"
+        android:icon="@drawable/bellicon"
+        android:orderInCategory="1"
+        android:title="@string/action_campana"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_apagar"
+        android:icon="@drawable/power"
+        android:orderInCategory="2"
+        android:title="@string/action_apagar"
+        app:showAsAction="always" />
+</menu>
