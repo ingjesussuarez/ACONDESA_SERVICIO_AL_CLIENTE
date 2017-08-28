@@ -1,6 +1,9 @@
 package jesu.acondesa_servicio_al_cliente;
 
+import android.app.Application;
 import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,16 +33,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
+   // private static Context context;
+    //public RVAdapter(Context context) {
+    //    this.context = context;
+    //}
 
-    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+
+
+    public static class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public View view;
         public MenuView.ItemView currentItem;
+        Context context;
         CardView cv;
         TextView personName;
         TextView personAge;
@@ -50,20 +61,33 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
         PersonViewHolder(View itemView) {
             super(itemView);
+            context = itemView.getContext();
             cv = (CardView)itemView.findViewById(R.id.cv);
             view = itemView;
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    // item clicked
-
-                }
-            });
             personName = (TextView)itemView.findViewById(R.id.person_name);
             personAge = (TextView)itemView.findViewById(R.id.person_age);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            view.setOnClickListener(new View.OnClickListener() {
+               @Override public void onClick(View v) {
+                    // item clicked
+                   //AQUI RAFA ARROJAS UNA ACTIVIDAD
+                   //Intent cliente= new Intent(context, jesu.acondesa_servicio_al_cliente.cliente.class);
+                   //context.startActivity(cliente);
+                    //AQUI RAFA ARROJAS UN TOAST dependiendo el item que toques
+                    Toast.makeText(context, personName.getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
 
+        void setOnClickListeners(){
+            personName.setOnClickListener(this);
+        }
 
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 
     List<Person> persons;
@@ -90,6 +114,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         personViewHolder.personAge.setText(persons.get(i).age);
         personViewHolder.personPhoto.setImageResource(persons.get(i).photoId);
         //personViewHolder.itemView = persons.get(i).photoId);
+
+
     }
 
     @Override

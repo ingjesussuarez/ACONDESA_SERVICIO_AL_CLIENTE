@@ -30,7 +30,7 @@ public class cliente extends AppCompatActivity {
         llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
-
+        //new RVAdapter(this);
         initializeData();
         initializeAdapter();
 
