@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ConsultarDatos().execute("http://acondesa.com.co/~acondesa/servicioalcliente/consulta.php?id="+mEmailView.getText().toString());
+                new ConsultarDatos().execute("movilwebacondesa.com/movilwebfase2/consulta.php?id="+mEmailView.getText().toString());
                 attemptLogin();
             }
         });
