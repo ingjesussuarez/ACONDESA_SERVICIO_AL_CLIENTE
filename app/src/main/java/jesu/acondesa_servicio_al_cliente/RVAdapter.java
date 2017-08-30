@@ -69,7 +69,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
             view.setOnClickListener(new View.OnClickListener() {
                @Override public void onClick(View v) {
-                    // item clicked
+                    //item clicked
                    //AQUI RAFA ARROJAS UNA ACTIVIDAD
                    //Intent cliente= new Intent(context, jesu.acondesa_servicio_al_cliente.cliente.class);
                    //context.startActivity(cliente);
