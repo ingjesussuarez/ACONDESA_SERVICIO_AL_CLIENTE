@@ -30,7 +30,7 @@ public class ruta extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_ruta, container, false);
         rv=(RecyclerView)rootView.findViewById(R.id.rv);
-
+//ruta
        llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
