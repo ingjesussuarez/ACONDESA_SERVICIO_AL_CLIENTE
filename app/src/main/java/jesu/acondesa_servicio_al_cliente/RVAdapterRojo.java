@@ -51,9 +51,9 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
-        personViewHolder.personName.setText(persons.get(i).name);
-        personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.personPhoto.setImageResource(persons.get(i).photoId);
+        personViewHolder.personName.setText(persons.get(i).nombre);
+        personViewHolder.personAge.setText(persons.get(i).direccion);
+        personViewHolder.personPhoto.setImageResource(R.drawable.boton_redondo_rojo);
     }
 
     @Override

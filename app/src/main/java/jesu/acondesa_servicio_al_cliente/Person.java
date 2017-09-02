@@ -1,13 +1,21 @@
 package jesu.acondesa_servicio_al_cliente;
 
 class Person {
-    String name;
-    String age;
-    int photoId;
+    String nombre;
+    String direccion;
+    int id;
 
-    Person(String name, String age, int photoId) {
-        this.name = name;
-        this.age = age;
-        this.photoId = photoId;
+
+    Person(){
+        nombre = null;
+        direccion = null;
+        id = R.mipmap.carrito_compras;
     }
+
+    Person(String nomb, String dir, int id) {
+        this.nombre = nomb;
+        this.direccion = dir;
+        this.id = id;
+    }
+
 }

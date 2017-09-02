@@ -1,6 +1,8 @@
 package jesu.acondesa_servicio_al_cliente;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,10 +19,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.app.Activity;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
+    SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
+    String password = "";
+    String email = "";
+    ArrayList<Person> persons = new ArrayList<>();
+    ProgressBar progress;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -40,9 +62,57 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getIntent().getExtras();
+        //al resumir la aplicacion, obtener los datos de login guardados en sharedpreferences,
+        // para mantener la ultima sesion y asi el ultimo estado de la app
+        Context context = MainActivity.this;
+        sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        email = sharedPreferences.getString("email", "none");
+        password = sharedPreferences.getString("password", "none");
+        if (password.equals("none") && email.equals("none")) {
+            //enviar al login
+            Intent intent = new Intent(context, LoginActivity.class);
+
+            startActivity(intent);
+            finish();
+        }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //al detenerse la app, guardar los datos de login en sharedpreferences
+        Context context = MainActivity.this;
+        sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.commit();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Context context = MainActivity.this;
+        sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        email = sharedPreferences.getString("email", "none");
+        password = sharedPreferences.getString("password", "none");
+        if (password.equals("none") && email.equals("none")) {
+            //enviar al login
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+
+            startActivity(intent);
+            MainActivity.this.finish();
+        }
+        if(persons.isEmpty()){
+            llenarRuta();
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,21 +133,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "By Jesus Suarez", Snackbar.LENGTH_LONG);
                         //.setAction("Action", null).show();
-                Intent MainActivity3 = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.cliente.class);
-                startActivity(MainActivity3);
+                //Intent MainActivity3 = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.cliente.class);
+                //startActivity(MainActivity3);
 
             }
         });
 
-        //setContentView(R.layout.fragment_pagos);
-        //personName = (TextView)findViewById(R.id.person_name);
-        //personAge = (TextView)findViewById(R.id.person_age);
-        //personPhoto = (ImageView)findViewById(R.id.person_photo);
-
-        //personName.setText("Emma Wilson");
-        //personAge.setText("23 years old");
-        //personPhoto.setImageResource(R.drawable.emma);
     }
+
 
 
     @Override
@@ -146,6 +209,10 @@ public class MainActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        resumen re = new resumen();
+        pedidos pe = new pedidos();
+
+
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -157,16 +224,12 @@ public class MainActivity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             //return PlaceholderFragment.newInstance(position + 1);
             switch (position) {
-                case 0:
-                    ruta ruta = new ruta();
-                    return ruta;
-                case 1:
-
-                    pedidos pedidos = new pedidos();
-                    return pedidos;
-                case 2:
-                    resumen resumen = new resumen();
-                    return resumen;
+                case 0: if(persons.isEmpty()){
+                    llenarRuta();
+                }
+                    return  new ruta(persons);
+                case 1: return pe;
+                case 2: return re;
             }
             return null;
         }
@@ -182,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return "ruta";
+
                 case 1:
                     return "pedidos";
                 case 2:
@@ -189,5 +253,61 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
+
     }
+    public void llenarRuta(){
+        persons = new ArrayList<>();
+        RequestQueue colaPeticiones = Volley.newRequestQueue(getApplicationContext());
+        Calendar hoy = Calendar.getInstance();
+        String[] dias = new String[]{
+                "Domingo",
+                "Lunes",
+                "Martes",
+                "Miercoles",
+                "Jueves",
+                "Viernes",
+                "Sabado"
+        };
+        //String diaHoy = dias[hoy.get(Calendar.DAY_OF_WEEK)-1];
+        String diaHoy = "Martes";
+        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraRuta.php?usuario="+email+"&dia="+diaHoy;
+        Toast.makeText(getApplicationContext(),url,Toast.LENGTH_LONG).show();
+        //progress = (ProgressBar) findViewById(R.id.progressBar);
+        //progress.setVisibility(View.VISIBLE);
+
+        JsonArrayRequest peticion = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+
+                // Toast.makeText(getContext(), "Recibiendo...", Toast.LENGTH_LONG).show();
+                try {
+                    for(int i=0;i<response.length();i++){
+                        // Get current json object
+                        JSONObject jsonPersona = null;
+
+                        jsonPersona = response.getJSONObject(i);
+
+                        // Display the formatted json data
+                        persons.add(new Person(jsonPersona.getString("nombresucursal"), jsonPersona.getString("direccion"),  R.mipmap.carrito_compras));
+                    }
+          //          progress.setVisibility(View.GONE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Error de conexión", Toast.LENGTH_LONG).show();
+
+                }
+                //call initializeAdapter()
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+        });
+        colaPeticiones.add(peticion);
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package jesu.acondesa_servicio_al_cliente;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import com.android.volley.RequestQueue;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +24,28 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ruta extends Fragment {
-    public List<Person> persons;
+    public static List<Person> persons;
     public RecyclerView rv;
     private RecyclerView.LayoutManager llm;
+    RequestQueue colaPeticiones;
+    private String nombre = "";
+    private String direccion = "";
+    private Person persona;
+    private SharedPreferences sharedpreferences;
+    private static final String MIS_PREFERENCIAS = "myPref"; // preferencias para el manejo de sesion nativa
+    private String email = "";
+    private String password = "";
+    //Context context = getActivity().getApplicationContext();
+    public ruta(){
+        persons = new ArrayList<>();
+    }
+
+    public ruta(ArrayList<Person> per){
+
+        persons = per;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,23 +56,34 @@ public class ruta extends Fragment {
        llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
+/*
+        sharedpreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        email = sharedpreferences.getString("email", "none");
+        password = sharedpreferences.getString("password", "none");
 
-        initializeData();
+*/
+
+        //persons.add(new Person("Rafa","hhdhfh",R.mipmap.carrito_compras));
+
+        //realizar una peticion http usando volley
+
         initializeAdapter();
         return rootView;
 
 
     }
 
-    private void initializeData(){
-        persons = new ArrayList<>();
-        persons.add(new Person("Jesus Suarez", "Calle 115 17 10", R.mipmap.carrito_compras));
-        persons.add(new Person("Jorbel Perez", "Cra 45 70 55", R.mipmap.carrito_compras));
-        persons.add(new Person("Adelita Casalins", "Cra 50 74 208", R.mipmap.carrito_compras));
+    void setRutas(ArrayList<Person> pe){
+        persons = pe;
+        initializeAdapter();
+        //redraw();
     }
+
 
     private void initializeAdapter(){
         RVAdapter adapter = new RVAdapter(persons);
         rv.setAdapter(adapter);
     }
+
+
 }
