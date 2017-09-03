@@ -28,6 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     String password = "";
     String email = "";
-    ArrayList<Person> persons = new ArrayList<>();
-    ProgressBar progress;
+    static ArrayList<Person> persons;
 
 
     /**
@@ -110,15 +111,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             MainActivity.this.finish();
         }
-        if(persons.isEmpty()){
-            llenarRuta();
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        persons = new ArrayList<>();
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -141,7 +140,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+        moveTaskToBack(true);
+    }
 
+    private void logout() {
+        SharedPreferences sharedpreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.clear();
+        editor.commit();
+
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+
+        startActivity(intent);
+        MainActivity.this.finish();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
             Intent MainActivity3 = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.cliente.class);
             startActivity(MainActivity3);
             return true;
+        }
+        if (id == R.id.action_apagar) {
+            this.logout();
         }
 
         return super.onOptionsItemSelected(item);
@@ -209,13 +228,14 @@ public class MainActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        resumen re = new resumen();
-        pedidos pe = new pedidos();
-
-
-
+        resumen re = null;
+        pedidos pe = null;
+        ruta ru = null;
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
+            this.re = null;
+            this.ru = null;
+            this.pe = null;
         }
 
         @Override
@@ -224,12 +244,15 @@ public class MainActivity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             //return PlaceholderFragment.newInstance(position + 1);
             switch (position) {
-                case 0: if(persons.isEmpty()){
-                    llenarRuta();
-                }
-                    return  new ruta(persons);
-                case 1: return pe;
-                case 2: return re;
+                case 0: if(ru == null)
+                            ru = new ruta();
+                        return  ru;
+                case 1: if(pe == null)
+                            pe = new pedidos();
+                        return pe;
+                case 2: if(re == null)
+                            re = new resumen();
+                        return re;
             }
             return null;
         }
@@ -256,58 +279,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void llenarRuta(){
-        persons = new ArrayList<>();
-        RequestQueue colaPeticiones = Volley.newRequestQueue(getApplicationContext());
-        Calendar hoy = Calendar.getInstance();
-        String[] dias = new String[]{
-                "Domingo",
-                "Lunes",
-                "Martes",
-                "Miercoles",
-                "Jueves",
-                "Viernes",
-                "Sabado"
-        };
-        //String diaHoy = dias[hoy.get(Calendar.DAY_OF_WEEK)-1];
-        String diaHoy = "Martes";
-        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraRuta.php?usuario="+email+"&dia="+diaHoy;
-        Toast.makeText(getApplicationContext(),url,Toast.LENGTH_LONG).show();
-        //progress = (ProgressBar) findViewById(R.id.progressBar);
-        //progress.setVisibility(View.VISIBLE);
 
-        JsonArrayRequest peticion = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-
-            @Override
-            public void onResponse(JSONArray response) {
-
-                // Toast.makeText(getContext(), "Recibiendo...", Toast.LENGTH_LONG).show();
-                try {
-                    for(int i=0;i<response.length();i++){
-                        // Get current json object
-                        JSONObject jsonPersona = null;
-
-                        jsonPersona = response.getJSONObject(i);
-
-                        // Display the formatted json data
-                        persons.add(new Person(jsonPersona.getString("nombresucursal"), jsonPersona.getString("direccion"),  R.mipmap.carrito_compras));
-                    }
-          //          progress.setVisibility(View.GONE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Error de conexión", Toast.LENGTH_LONG).show();
-
-                }
-                //call initializeAdapter()
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-            }
-        });
-        colaPeticiones.add(peticion);
-
-    }
 
 }

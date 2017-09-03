@@ -148,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     Intent MainActivity = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.MainActivity.class);
                                     startActivity(MainActivity);
+
                                     Toast.makeText(LoginActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
 
                                 }else {
@@ -185,6 +186,9 @@ public class LoginActivity extends AppCompatActivity {
         return password.length() > 4;
     }
 
+    private void cerrar(){
+        finish();
+    }
     /**
      * Shows the progress UI and hides the login form.
      */

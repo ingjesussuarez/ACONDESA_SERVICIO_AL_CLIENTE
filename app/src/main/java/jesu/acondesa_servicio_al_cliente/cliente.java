@@ -61,9 +61,9 @@ public class cliente extends AppCompatActivity {
 
     private void initializeData(){
         persons = new ArrayList<>();
-        persons.add(new Person("Jesus Suarez", "Calle 115 17 10", R.mipmap.carrito_compras));
-        persons.add(new Person("Jorbel Perez", "Cra 45 70 55", R.mipmap.carrito_compras));
-        persons.add(new Person("Adelita Casalins", "Cra 50 74 208", R.mipmap.carrito_compras));
+        persons.add(new Person("Jesus Suarez", "Calle 115 17 10", R.mipmap.carrito_compras,"76872232"));
+        persons.add(new Person("Jorbel Perez", "Cra 45 70 55", R.mipmap.carrito_compras,"8769768"));
+        persons.add(new Person("Adelita Casalins", "Cra 50 74 208", R.mipmap.carrito_compras,"879687"));
     }
 
     private void initializeAdapter(){

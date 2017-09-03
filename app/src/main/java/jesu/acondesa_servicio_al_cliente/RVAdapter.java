@@ -14,10 +14,14 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.graphics.Bitmap;
@@ -54,7 +58,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         CardView cv;
         TextView personName;
         TextView personAge;
+        TextView personTel;
         ImageView personPhoto;
+        ImageButton menuButton;
         private List personasList;
         private ItemClickListener clickListener;
 
@@ -66,7 +72,25 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             view = itemView;
             personName = (TextView)itemView.findViewById(R.id.person_name);
             personAge = (TextView)itemView.findViewById(R.id.person_age);
+            personTel = (TextView)itemView.findViewById(R.id.person_tel);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            menuButton = new ImageButton(itemView.getContext());
+            menuButton= (ImageButton) view.findViewById(R.id.imageButton);
+            menuButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopupMenu(view,2);
+                }
+                private void showPopupMenu(View view,int position) {
+                    // inflate menu
+                    PopupMenu popup = new PopupMenu(view.getContext(),view );
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.menu_ruta, popup.getMenu());
+                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
+                    popup.show();
+                }
+
+            });
             view.setOnClickListener(new View.OnClickListener() {
                @Override public void onClick(View v) {
                     //item clicked
@@ -80,6 +104,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
         }
 
+
         void setOnClickListeners(){
             personName.setOnClickListener(this);
         }
@@ -88,7 +113,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         public void onClick(View v) {
 
         }
+
     }
+
 
     List<Person> persons;
 
@@ -112,6 +139,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     public void onBindViewHolder(PersonViewHolder personViewHolder, int i) {
         personViewHolder.personName.setText(persons.get(i).nombre);
         personViewHolder.personAge.setText(persons.get(i).direccion);
+        personViewHolder.personTel.setText(persons.get(i).telefono);
         personViewHolder.personPhoto.setImageResource(R.mipmap.carrito_compras);
         //personViewHolder.itemView = persons.get(i).photoId);
 
@@ -122,4 +150,39 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     public int getItemCount() {
         return persons.size();
     }
+    static class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        private int position;
+        public MyMenuItemClickListener(int position) {
+            //this.position=positon;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+
+                case R.id.opcion1:
+                    // mDataSet.remove(position);
+                    //notifyItemRemoved(position);
+                    // notifyItemRangeChanged(position,mDataSet.size());
+                    /*
+                    mySharedPreferences.saveStringPrefs(Constants.REMOVE_CTAGURY,RemoveCategory,MainActivity.context);
+                    Toast.makeText(MainActivity.context, "Add to favourite", Toast.LENGTH_SHORT).show();*/
+                    return true;
+                case R.id.opcion2:
+                    /*
+                    mDataSet.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position,mDataSet.size());
+                    Toast.makeText(MainActivity.context, "Done for now", Toast.LENGTH_SHORT).show();*/
+                    return true;
+
+                default:
+            }
+            return false;
+        }
+
+    }
+
 }
+

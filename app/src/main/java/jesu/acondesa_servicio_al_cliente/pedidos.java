@@ -47,9 +47,9 @@ public class pedidos extends Fragment {
 
     private void initializeData(){
         persons = new ArrayList<>();
-        persons.add(new Person("Jesus Suarez", "Consecutivo: 50412122017001", R.mipmap.erdabn));
-        persons.add(new Person("Jorbel Perez", "Consecutivo: 50412122017001", R.mipmap.erdabn));
-        persons.add(new Person("Adelita Casalins", "Consecutivo: 50412122017001", R.mipmap.erdabn));
+        persons.add(new Person("Jesus Suarez", "Consecutivo: 50412122017001", R.mipmap.erdabn,"7687678"));
+        persons.add(new Person("Jorbel Perez", "Consecutivo: 50412122017001", R.mipmap.erdabn,"7687678"));
+        persons.add(new Person("Adelita Casalins", "Consecutivo: 50412122017001", R.mipmap.erdabn,"7687678"));
     }
 
     private void initializeAdapter(){
