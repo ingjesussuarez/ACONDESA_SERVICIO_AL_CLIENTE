@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     String password = "";
     String email = "";
-    static ArrayList<Person> persons;
 
 
     /**
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        persons = new ArrayList<>();
+
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
