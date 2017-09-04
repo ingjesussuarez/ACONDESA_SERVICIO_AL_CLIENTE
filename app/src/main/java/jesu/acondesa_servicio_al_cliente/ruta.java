@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -89,6 +90,11 @@ public class ruta extends Fragment {
     public void llenarRuta(){
         persons = new ArrayList<>();
         RequestQueue colaPeticiones = Volley.newRequestQueue(this.getContext().getApplicationContext());
+        final int MAX_TIMEOUT_CONECTION = 60000;//tiempo en milisegundos para el tiempo de espera
+        // , si se supera este tiempo y no se recibe respuesta, se reintenta la peticion tantas veces como este configurada
+        // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
+        final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
+        // se muestra error, hay que manejar este evento
         Calendar hoy = Calendar.getInstance();
         String[] dias = new String[]{
                 "Domingo",
@@ -143,16 +149,20 @@ public class ruta extends Fragment {
 
 
 
-                //          progress.setVisibility(View.GONE);
+                          progress.setVisibility(View.GONE);
 
                 //call initializeAdapter()
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(getContext().getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                progress.setVisibility(View.GONE);
+                Toast.makeText(getContext().getApplicationContext(), "Error: "+volleyError, Toast.LENGTH_LONG).show();
+
             }
         });
+        peticion.setShouldCache(true);
+        peticion.setRetryPolicy(new DefaultRetryPolicy(MAX_TIMEOUT_CONECTION,MAX_RETRYS_CONECTION,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         colaPeticiones.add(peticion);
 
     }

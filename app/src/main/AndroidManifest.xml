@@ -40,7 +40,16 @@
         <activity
             android:name=".cliente"
             android:label="@string/title_activity_cliente"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RegistrarPedido"
+            android:label="@string/title_activity_registrar_pedido"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jesu.acondesa_servicio_al_cliente.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -128,6 +129,11 @@ public class LoginActivity extends AppCompatActivity {
            // mAuthTask = new UserLoginTask(email, password);
             RequestQueue peticiones = Volley.newRequestQueue(getApplicationContext());
             String url = "http://movilwebacondesa.com/movilweb/app3/ValidaUser.php?usuario="+email+"&password="+password;
+            final int MAX_TIMEOUT_CONECTION = 60000;//tiempo en milisegundos para el tiempo de espera
+            // , si se supera este tiempo y no se recibe respuesta, se reintenta la peticion tantas veces como este configurada
+            // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
+            final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
+            // se muestra error, hay que manejar este evento
             JsonObjectRequest peticion = new JsonObjectRequest(Request.Method.GET,
                     url,
                     null,
@@ -171,7 +177,8 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Error al conectar", Toast.LENGTH_SHORT).show();
                 }
             });
-
+            peticion.setShouldCache(true);
+            peticion.setRetryPolicy(new DefaultRetryPolicy(MAX_TIMEOUT_CONECTION,MAX_RETRYS_CONECTION,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             peticiones.add(peticion);
         }
     }

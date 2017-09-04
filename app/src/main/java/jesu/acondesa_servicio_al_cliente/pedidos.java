@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -24,9 +26,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +48,7 @@ public class pedidos extends Fragment {
     private RVAdapterRojo adapter;
     private String email = "";
     private String password = "";
+    private TextView numPedidos;
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     ProgressBar progress;
@@ -58,7 +64,8 @@ public class pedidos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_pedidos, container, false);
-        rv=(RecyclerView)rootView.findViewById(R.id.rv);
+        rv=(RecyclerView)rootView.findViewById(R.id.rv2);
+        numPedidos = (TextView) rootView.findViewById(R.id.num_pedidos);
 //pedidos
         rv.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -68,7 +75,7 @@ public class pedidos extends Fragment {
         email = sharedPreferences.getString("email", "none");
         password = sharedPreferences.getString("password", "none");
 
-        progress = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progress = (ProgressBar) rootView.findViewById(R.id.progressBar2);
 
         if(pedidosList.isEmpty())
             llenarpedidos();
@@ -89,29 +96,30 @@ public class pedidos extends Fragment {
     public void llenarpedidos(){
         pedidosList = new ArrayList<>();
         RequestQueue colaPeticiones = Volley.newRequestQueue(this.getContext().getApplicationContext());
-        Calendar hoy = Calendar.getInstance();
-        String[] dias = new String[]{
-                "Domingo",
-                "Lunes",
-                "Martes",
-                "Miercoles",
-                "Jueves",
-                "Viernes",
-                "Sabado"
-        };
-        //String diaHoy = dias[hoy.get(Calendar.DAY_OF_WEEK)-1];
-        String diaHoy = "Martes";//para pruebas, borrar al entrar en produccion
-        String url= "http://movilwebacondesa.com/movilweb/app3/Muestrapedidos.php?usuario="+email+"&dia="+diaHoy;
+        String timeStampDate = "";
+        SimpleDateFormat date;
+        try{
+            date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            timeStampDate = date.format(new Date());
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
+
+        String fechaHoy = "2016-05-13";
+
+        //String diaHoy = "Martes";//para pruebas, borrar al entrar en produccion
+        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraPedidos.php?usuario="+email+"&fecha="+fechaHoy;
         Toast.makeText(getContext().getApplicationContext(),url,Toast.LENGTH_SHORT).show();
 
 
         progress.setVisibility(View.VISIBLE);
 
-        StringRequest peticion = new StringRequest(url, new Response.Listener<String>() {
+        StringRequest peticion = new StringRequest(Request.Method.POST,url, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String JSONresponse) {
-
+                int numeroPedidos = 0;
 
                 // Toast.makeText(getContext(), "Recibiendo...", Toast.LENGTH_LONG).show();
 
@@ -124,20 +132,24 @@ public class pedidos extends Fragment {
                     String[] nombres = new String[jsonArraypedidosList.length()];
                     String[] direcciones = new String[jsonArraypedidosList.length()];
                     String[] telefonos = new String[jsonArraypedidosList.length()];
+                    numeroPedidos = jsonArraypedidosList.length();
+                    numPedidos.setText(numeroPedidos);
 
-                    for(int i=0;i< jsonArraypedidosList.length();i++){
+                    for(int i=0;i< numeroPedidos;i++){
 
                         jsonObject = jsonArraypedidosList.getJSONObject(i);
 
                         nombres[i] = jsonObject.getString("nombresucursal");
-                        direcciones[i] = jsonObject.getString("direccion");
-                        telefonos[i] = jsonObject.getString("telefono");
+                        direcciones[i] = jsonObject.getString("consecutivo");
+                        telefonos[i] = jsonObject.getString("fecha");
 
                         Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i]);
                         pedidosList.add(personObject);
                     }
                     initializeAdapter();
                 } catch (JSONException e) {
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Error al conectar...", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
 
@@ -147,6 +159,7 @@ public class pedidos extends Fragment {
 
                 //call initializeAdapter()
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {

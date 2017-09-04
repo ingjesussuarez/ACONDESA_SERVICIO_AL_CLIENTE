@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="jesu.acondesa_servicio_al_cliente.MainActivity">
+    <item
+        android:id="@+id/action_actualizar_productos"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:orderInCategory="1"
+        android:title="@string/action_actualizar_productos"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_cancelar"
+        android:icon="@mipmap/erdabn"
+        android:orderInCategory="1"
+        android:title="@string/action_cancelar"
+        app:showAsAction="always" />
+</menu>
