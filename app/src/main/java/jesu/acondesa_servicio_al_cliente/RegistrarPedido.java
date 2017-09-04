@@ -6,6 +6,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 public class RegistrarPedido extends AppCompatActivity {
 
@@ -16,14 +18,19 @@ public class RegistrarPedido extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        WebView web = new WebView(this);
+        web =(WebView)findViewById(R.id.webview);
+        WebSettings webSettings = web.getSettings();
+        webSettings.setAppCacheEnabled(false);
+        webSettings.setBuiltInZoomControls(false);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setAllowFileAccess(true);
+        web.loadUrl("file:///android_asset/registrarProducto.html");
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

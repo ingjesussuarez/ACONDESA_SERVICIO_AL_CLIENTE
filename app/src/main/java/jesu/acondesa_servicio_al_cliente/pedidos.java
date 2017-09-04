@@ -133,7 +133,7 @@ public class pedidos extends Fragment {
                     String[] direcciones = new String[jsonArraypedidosList.length()];
                     String[] telefonos = new String[jsonArraypedidosList.length()];
                     numeroPedidos = jsonArraypedidosList.length();
-                    numPedidos.setText(numeroPedidos);
+                    numPedidos.setText(String.valueOf(numeroPedidos));
 
                     for(int i=0;i< numeroPedidos;i++){
 
@@ -155,7 +155,7 @@ public class pedidos extends Fragment {
 
 
 
-                //          progress.setVisibility(View.GONE);
+                 progress.setVisibility(View.GONE);
 
                 //call initializeAdapter()
             }
@@ -163,6 +163,7 @@ public class pedidos extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                initializeAdapter();
                 Toast.makeText(getContext().getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
             }
         });

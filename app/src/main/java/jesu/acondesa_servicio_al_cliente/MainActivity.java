@@ -150,10 +150,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.clear();
         editor.commit();
-
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-
-        startActivity(intent);
         MainActivity.this.finish();
 
     }

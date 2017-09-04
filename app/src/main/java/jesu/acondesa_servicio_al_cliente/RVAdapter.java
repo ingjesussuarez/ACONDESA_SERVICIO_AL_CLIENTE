@@ -48,6 +48,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     //public RVAdapter(Context context) {
     //    this.context = context;
     //}
+    Context context;
 
 
 
@@ -86,7 +87,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
                     PopupMenu popup = new PopupMenu(view.getContext(),view );
                     MenuInflater inflater = popup.getMenuInflater();
                     inflater.inflate(R.menu.menu_ruta, popup.getMenu());
-                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
+                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(context,position));
                     popup.show();
                 }
 
@@ -151,10 +152,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         return persons.size();
     }
     static class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-
+        private Context context;
         private int position;
-        public MyMenuItemClickListener(int position) {
+        public MyMenuItemClickListener(Context context,int position) {
             //this.position=positon;
+            this.context = context;
         }
 
         @Override
@@ -162,12 +164,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             switch (menuItem.getItemId()) {
 
                 case R.id.opcion1:
-                    // mDataSet.remove(position);
-                    //notifyItemRemoved(position);
-                    // notifyItemRangeChanged(position,mDataSet.size());
-                    /*
-                    mySharedPreferences.saveStringPrefs(Constants.REMOVE_CTAGURY,RemoveCategory,MainActivity.context);
-                    Toast.makeText(MainActivity.context, "Add to favourite", Toast.LENGTH_SHORT).show();*/
+
+                    Intent regist = new Intent(context, jesu.acondesa_servicio_al_cliente.RegistrarPedido.class);
+                    context.startActivity(regist);
                     return true;
                 case R.id.opcion2:
                     /*
@@ -183,6 +182,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         }
 
     }
+
+
 
 }
 

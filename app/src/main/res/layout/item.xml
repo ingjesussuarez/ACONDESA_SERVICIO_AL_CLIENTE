@@ -18,16 +18,16 @@
 
         <ImageButton
             android:id="@+id/imageButton"
-            android:layout_width="10dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_marginEnd="0dp"
             android:background="@drawable/dots_icon"
             android:backgroundTint="@color/colorPrimary"
             android:contentDescription="options"
-            android:contextClickable="true"
-            android:elevation="13dp"
+            android:elevation="3dp"
+            android:scaleType="center"
             android:tint="@color/colorPrimary"
             android:tintMode="add" />
 
@@ -48,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/person_photo"
-            android:paddingEnd="6dp"
-            android:textSize="14sp"
+            android:paddingEnd="10dp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView

@@ -6,12 +6,12 @@
         android:id="@+id/action_actualizar_productos"
         android:icon="@android:drawable/ic_popup_sync"
         android:orderInCategory="1"
-        android:title="@string/action_actualizar_productos"
+        android:title="action_actualizar_productos"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_cancelar"
         android:icon="@mipmap/erdabn"
         android:orderInCategory="1"
-        android:title="@string/action_cancelar"
+        android:title="action_cancelar"
         app:showAsAction="always" />
 </menu>

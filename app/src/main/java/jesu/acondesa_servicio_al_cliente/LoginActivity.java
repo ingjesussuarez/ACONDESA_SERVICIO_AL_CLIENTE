@@ -151,7 +151,8 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.putString("email",email); // insertando el usuario
                                     editor.putString("password",password); // insertando la clave
                                     editor.commit(); // guardar datos
-
+                                    mPasswordView.setText("");
+                                    //mEmailView.setText("");
                                     Intent MainActivity = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.MainActivity.class);
                                     startActivity(MainActivity);
 
