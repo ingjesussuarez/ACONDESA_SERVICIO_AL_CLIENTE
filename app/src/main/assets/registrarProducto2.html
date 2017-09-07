@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta charset="utf-8" />
+        <title></title>
+
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
+
+</head>
+<body>
+<div class="container">
+<div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover" id="table">
+                <thead>
+                <tr data-tabullet-map="id">
+                    <th width="50" data-tabullet-map="_index" data-tabullet-readonly="true">
+                        No
+                    </th>
+                    <th data-tabullet-map="name">Producto</th>
+                    <th data-tabullet-map="level">Cant</th>
+                    <th data-tabullet-map="precio" data-tabullet-type="select">Precio</th>
+                    <th width="50" data-tabullet-type="edit"></th>
+                    <th width="50" data-tabullet-type="delete"></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+<script src="jquery.min.js"></script>
+<script src="jquery-ui.min.js"></script>
+<script src="Tabullet.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<!-- funciones de interfaz android -->
+<script type="text/javascript">
+    function set_datos_cliente(data){
+        
+        alert(data);
+        item = JSON.parse(data);
+        alert(item.nombre);
+ document.getElementById("NombreText").innerHTML = item.nombre;
+   }
+</script>
+<!-- fin de funciones interfaz android -->
+
+    <script>
+        $(function () {
+            var source = [
+                
+            ];
+
+            function resetTabullet() {
+                $("#table").tabullet({
+                    data: source,
+                    action: function (mode, data) {
+                        console.dir(mode);
+                        if (mode === 'save') {
+                            source.push(data);
+                        }
+                        if (mode === 'edit') {
+                            for (var i = 0; i < source.length; i++) {
+                                if (source[i].id == data.id) {
+                                    source[i] = data;
+                                }
+                            }
+                        }
+                        if(mode == 'delete'){
+                            for (var i = 0; i < source.length; i++) {
+                                if (source[i].id == data) {
+                                    source.splice(i,1);
+                                    break;
+                                }
+                            }
+                        }
+                        resetTabullet();
+                    }
+                });
+            }
+
+            resetTabullet();
+        });
+    </script>

@@ -1,0 +1,42 @@
+data = "INSERT INTO pedidos(consecutivo, fecha, idsucursal, idvendedor, idzona, idproducto, cantidad, estado, idrutero, latitud, longitud) VALUES ("5042017090630", "2017-09-06",986,1,5,1,23,"C",1022663,"3423","32235")INSERT INTO pedidos(consecutivo, fecha, idsucursal, idvendedor, idzona, idproducto, cantidad, estado, idrutero, latitud, longitud) VALUES ("5042017090630", "2017-09-06",986,1,5,67,12,"C",1022663,"3423","32235")
+
+UPDATE rutero SET visitado = 1, hizopedido=1, fechahoravisita='2017-09-06 18:09:42' WHERE id=1022663
+
+09-06 15:21:38.605 14393-14393/jesu.acondesa_servicio_al_cliente E/RecyclerView: No adapter attached; skipping layout   
+
+E/RemoteViews: ANR Warning,RemoteViews can only be used once ,if not ,it may cause ANR in hosts such as Laucher,SystemUI. keys for search <ANR Exception MSG   History>
+
+09-06 16:34:39.591 16050-16050/jesu.acondesa_servicio_al_cliente E/dalvikvm: Could not find class 'android.graphics.drawable.RippleDrawable', referenced from method android.support.v7.widget.AppCompatImageHelper.hasOverlappingRendering
+
+09-06 17:15:37.122 713-713/? E/RemoteViews: ANR Warning,RemoteViews can only be used once ,if not ,it may cause ANR in hosts such as Laucher,SystemUI. keys for search <ANR Exception MSG   History>
+09-06 17:15:46.789 22343-22343/? E/dalvikvm: Could not find class 'android.app.Notification$Action$Builder', referenced from method a.a.a.a.d.a
+09-06 17:15:46.824 22343-22343/? E/dalvikvm: Could not find class 'android.app.Notification$Action$Builder', referenced from method a.a.a.a.d.a
+09-06 17:15:46.834 22343-22343/? E/dalvikvm: Could not find class 'android.app.Notification$MessagingStyle', referenced from method a.a.a.a.d.a
+09-06 17:15:46.860 22343-22343/? E/dalvikvm: Could not find class 'android.support.v4.app.ad', referenced from method a.a.a.a.d.a
+09-06 17:15:46.860 22343-22343/? E/dalvikvm: Could not find class 'android.support.v4.app.y', referenced from method a.a.a.a.d.a
+09-06 17:15:46.883 22343-22343/? E/dalvikvm: Could not find class 'android.app.RemoteInput[]', referenced from method a.a.a.a.d.a
+09-06 17:17:42.749 713-730/? E/Sensors: new acc setDelay handle(0),ns(20000000) err! go to hwmsen
+
+09-06 18:04:53.660 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] +waitForBufferFilled_l: 0/0
+09-06 18:04:53.660 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] -waitForBufferFilled_l
+09-06 18:04:53.663 1439-23557/? E/MediaPlayer: Should have subtitle controller already set
+09-06 18:04:53.864 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] +waitForBufferFilled_l: 0/0
+09-06 18:04:53.865 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] -waitForBufferFilled_l
+09-06 18:04:53.959 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] +waitForBufferFilled_l: 1/0
+09-06 18:04:53.959 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] -waitForBufferFilled_l
+09-06 18:04:54.051 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] No more output data in fillOutputBuffer, mFilledBuffers size=2
+09-06 18:04:54.051 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] No more output data in fillOutputBuffer, mFilledBuffers size=1
+09-06 18:04:54.052 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] No more output data in fillOutputBuffer, mFilledBuffers size=0
+09-06 18:04:54.052 149-23564/? E/OMXCodec: [OMX.MTK.AUDIO.DECODER.VORBIS] read() final return
+09-06 18:05:04.672 177-23272/? E/ADB_SERVICES: ERROR: fd = 14, n = -1, errno = 5 (I/O error)
+09-06 18:05:04.679 177-23271/? E/ADB_SERVICES: ERROR: fd = 14, n = -1, errno = 5 (I/O error)
+09-06 18:05:04.686 177-23576/? E/ADB_SERVICES: ERROR: fd = 14, n = -1, errno = 5 (I/O error)
+09-06 18:05:05.639 1159-3052/? E/NetworkScheduler.SR: Invalid parameter app
+09-06 18:05:05.639 1159-3052/? E/NetworkScheduler.SR: Invalid package name : Perhaps you didn't include a PendingIntent in the extras?
+09-06 18:06:44.598 713-1280/? E/Sensors: new acc setDelay handle(0),ns(20000000) err! go to hwmsen
+09-06 18:08:08.205 713-745/? E/Sensors: new acc setDelay handle(7),ns(200000000) err! go to hwmsen
+09-06 18:08:08.208 713-963/? E/Sensors: new acc setDelay handle(7),ns(66667000) err! go to hwmsen
+09-06 18:08:23.350 713-1119/? E/Sensors: new acc setDelay handle(7),ns(200000000) err! go to hwmsen
+09-06 18:08:23.370 713-745/? E/Sensors: new acc setDelay handle(7),ns(200000000) err! go to hwmsen
+09-06 18:08:23.372 713-1280/? E/Sensors: new acc setDelay handle(7),ns(66667000) err! go to hwmsen
+09-06 18:08:25.650 713-1056/? E/Sensors: new acc setDelay handle(7),ns(200000000) err! go to hwmsen
