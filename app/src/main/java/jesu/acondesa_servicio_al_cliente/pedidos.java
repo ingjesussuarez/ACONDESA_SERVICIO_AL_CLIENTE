@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -46,7 +47,7 @@ public class pedidos extends Fragment {
     public RecyclerView rv;
     private RecyclerView.LayoutManager llm;
     private RVAdapterRojo adapter;
-    private String email = "";
+    private String usuario = "";
     private String password = "";
     private TextView numPedidos;
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
@@ -72,7 +73,7 @@ public class pedidos extends Fragment {
         rv.setLayoutManager(llm);
 
         sharedPreferences = this.getContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-        email = sharedPreferences.getString("email", "none");
+        usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
 
         progress = (ProgressBar) rootView.findViewById(R.id.progressBar2);
@@ -96,22 +97,22 @@ public class pedidos extends Fragment {
     public void llenarpedidos(){
         pedidosList = new ArrayList<>();
         RequestQueue colaPeticiones = Volley.newRequestQueue(this.getContext().getApplicationContext());
-        String timeStampDate = "";
+        String formatedDate = "";
         SimpleDateFormat date;
+        final int MAX_TIMEOUT_CONECTION = 60000;//tiempo en milisegundos para el tiempo de espera
+        // , si se supera este tiempo y no se recibe respuesta, se reintenta la peticion tantas veces como este configurada
+        // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
+        final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
+        // se muestra error, hay que manejar este evento
         try{
             date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            timeStampDate = date.format(new Date());
+            formatedDate = date.format(new Date());
         }catch(Exception e){
             e.printStackTrace();
 
         }
 
-        String fechaHoy = "2016-05-13";
-
-        //String diaHoy = "Martes";//para pruebas, borrar al entrar en produccion
-        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraPedidos.php?usuario="+email+"&fecha="+fechaHoy;
-        Toast.makeText(getContext().getApplicationContext(),url,Toast.LENGTH_SHORT).show();
-
+        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraPedidos.php?usuario="+usuario+"&fecha="+formatedDate;
 
         progress.setVisibility(View.VISIBLE);
 
@@ -143,7 +144,7 @@ public class pedidos extends Fragment {
                         direcciones[i] = jsonObject.getString("consecutivo");
                         telefonos[i] = jsonObject.getString("fecha");
 
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i]);
+                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],"","");
                         pedidosList.add(personObject);
                     }
                     initializeAdapter();
@@ -167,6 +168,8 @@ public class pedidos extends Fragment {
                 Toast.makeText(getContext().getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
             }
         });
+        peticion.setShouldCache(true);
+        peticion.setRetryPolicy(new DefaultRetryPolicy(MAX_TIMEOUT_CONECTION,MAX_RETRYS_CONECTION,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         colaPeticiones.add(peticion);
 
     }

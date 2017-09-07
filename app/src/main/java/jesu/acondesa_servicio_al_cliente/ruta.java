@@ -42,7 +42,7 @@ public class ruta extends Fragment {
     public RecyclerView rv;
     private RecyclerView.LayoutManager llm;
     private RVAdapter adapter;
-    private String email = "";
+    private String usuario = "";
     private String password = "";
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
@@ -66,7 +66,7 @@ public class ruta extends Fragment {
         rv.setLayoutManager(llm);
 
         sharedPreferences = this.getContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-        email = sharedPreferences.getString("email", "none");
+        usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
 
         progress = (ProgressBar) rootView.findViewById(R.id.progressBar);
@@ -107,9 +107,8 @@ public class ruta extends Fragment {
         };
         //String diaHoy = dias[hoy.get(Calendar.DAY_OF_WEEK)-1];
         String diaHoy = "Martes";//para pruebas, borrar al entrar en produccion
-        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraRuta.php?usuario="+email+"&dia="+diaHoy;
-        Toast.makeText(getContext().getApplicationContext(),url,Toast.LENGTH_SHORT).show();
-
+        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraRuta.php?usuario="+usuario+"&dia="+diaHoy;
+        Toast.makeText(this.getContext(), url, Toast.LENGTH_LONG).show();
 
         progress.setVisibility(View.VISIBLE);
 
@@ -118,18 +117,23 @@ public class ruta extends Fragment {
             @Override
             public void onResponse(String JSONresponse) {
 
-
-                // Toast.makeText(getContext(), "Recibiendo...", Toast.LENGTH_LONG).show();
-
                 JSONObject jsonObject=null;
 
                 try {
 
                     JSONArray jsonArrayPersons = new JSONArray(JSONresponse);
 
-                    String[] nombres = new String[jsonArrayPersons.length()];
-                    String[] direcciones = new String[jsonArrayPersons.length()];
-                    String[] telefonos = new String[jsonArrayPersons.length()];
+                    int length = jsonArrayPersons.length();
+                    String[] nombres = new String[length];
+                    String[] nombreterceros = new String[length];
+                    String[] idterceros = new String[length];
+                    String[] zonas = new String[length];
+                    String[] direcciones = new String[length];
+                    String[] telefonos = new String[length];
+                    String[] datas = new String[length];
+                    String[] idruteros = new String[length];
+                    String[] idsucursales = new String[length];
+                    //a parte se necesitan idvendedor, numero consecutivo, codigovendedor y nombrevendedor
 
                     for(int i=0;i< jsonArrayPersons.length();i++){
 
@@ -138,20 +142,26 @@ public class ruta extends Fragment {
                         nombres[i] = jsonObject.getString("nombresucursal");
                         direcciones[i] = jsonObject.getString("direccion");
                         telefonos[i] = jsonObject.getString("telefono");
+                        idsucursales[i] = jsonObject.getString("idsucursal");
+                        nombreterceros[i] = jsonObject.getString("nombretercero");
+                        idruteros[i] = jsonObject.getString("id");
+                        idterceros[i] = jsonObject.getString("idtercero");
+                        zonas[i] = jsonObject.getString("zona");
 
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i]);
+                        //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente
+                        // ser parseado a un Objeto JavaScript
+                        datas[i] = "{\"nombrecliente\":\"" +nombres[i]+ "\",\"id_cliente\":\"" +idsucursales[i]+ "\"," +
+                                "\"id_rutero\":\"" + idruteros[i] + "\"}";
+
+                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],idsucursales[i],datas[i]);
                         persons.add(personObject);
                     }
                     initializeAdapter();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                progress.setVisibility(View.GONE);
 
-
-
-                          progress.setVisibility(View.GONE);
-
-                //call initializeAdapter()
             }
         }, new Response.ErrorListener() {
             @Override

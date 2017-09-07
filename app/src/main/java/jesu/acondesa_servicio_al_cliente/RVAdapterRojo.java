@@ -91,23 +91,10 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
                 }
 
             });
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    //item clicked
-                    //AQUI RAFA ARROJAS UNA ACTIVIDAD
-                    //Intent cliente= new Intent(context, jesu.acondesa_servicio_al_cliente.cliente.class);
-                    //context.startActivity(cliente);
-                    //AQUI RAFA ARROJAS UN TOAST dependiendo el item que toques
-                    Toast.makeText(context, personName.getText(), Toast.LENGTH_SHORT).show();
-                }
-            });
+
 
         }
 
-
-        void setOnClickListeners(){
-            personName.setOnClickListener(this);
-        }
 
         @Override
         public void onClick(View v) {

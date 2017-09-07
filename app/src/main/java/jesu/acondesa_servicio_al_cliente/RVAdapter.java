@@ -3,15 +3,23 @@ package jesu.acondesa_servicio_al_cliente;
 import android.app.Application;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
+import android.icu.util.GregorianCalendar;
+import android.icu.util.TimeZone;
 import android.renderscript.Allocation;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -39,9 +47,12 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 import java.util.List;
+import java.util.Locale;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
    // private static Context context;
@@ -60,9 +71,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         TextView personName;
         TextView personAge;
         TextView personTel;
+        TextView personId;
+        TextView datacliente;
         ImageView personPhoto;
         ImageButton menuButton;
         private List personasList;
+        public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
+        SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
         private ItemClickListener clickListener;
 
 
@@ -75,36 +90,48 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             personAge = (TextView)itemView.findViewById(R.id.person_age);
             personTel = (TextView)itemView.findViewById(R.id.person_tel);
             personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            personId = (TextView) itemView.findViewById(R.id.person_id);
+            datacliente = (TextView) itemView.findViewById(R.id.person_data);
             menuButton = new ImageButton(itemView.getContext());
             menuButton= (ImageButton) view.findViewById(R.id.imageButton);
+            //para obtener los datos del vendeor accedemos a las variables compartidas de la sesion y armamos una String en formato JSON
+            Context context = itemView.getContext();
+            SharedPreferences sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+            String usuario = sharedPreferences.getString("usuario", "none");
+            String idvendedor = sharedPreferences.getString("idvendedor", "none");
+            String nomvendedor = sharedPreferences.getString("nomvendedor", "none");
+            String codvendedor = sharedPreferences.getString("codvendedor", "none");
+            String datavendedor = "";
+
+            datavendedor =  "{\"usuario\":\""+usuario+"\"," +
+                            "\"idvendedor\":\"" + idvendedor + "\"," +
+                            "\"nomvendedor\":\"" + nomvendedor + "\"," +
+                            "\"codvendedor\":\"" + codvendedor+ "\"}";
+
+            final String finalDatavendedor = datavendedor;
+
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(view,2);
+                    showPopupMenu(view,datacliente.getText().toString(), finalDatavendedor);
                 }
-                private void showPopupMenu(View view,int position) {
+                private void showPopupMenu(View view,String datacliente,String datavendedor) {
                     // inflate menu
                     PopupMenu popup = new PopupMenu(view.getContext(),view );
                     MenuInflater inflater = popup.getMenuInflater();
                     inflater.inflate(R.menu.menu_ruta, popup.getMenu());
-                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(context,position));
+                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(view.getContext(),datacliente,datavendedor));
                     popup.show();
                 }
 
             });
             view.setOnClickListener(new View.OnClickListener() {
                @Override public void onClick(View v) {
-                    //item clicked
-                   //AQUI RAFA ARROJAS UNA ACTIVIDAD
-                   //Intent cliente= new Intent(context, jesu.acondesa_servicio_al_cliente.cliente.class);
-                   //context.startActivity(cliente);
-                    //AQUI RAFA ARROJAS UN TOAST dependiendo el item que toques
-                    Toast.makeText(context, personName.getText(), Toast.LENGTH_SHORT).show();
+                    menuButton.callOnClick();
                 }
             });
 
         }
-
 
         void setOnClickListeners(){
             personName.setOnClickListener(this);
@@ -141,7 +168,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         personViewHolder.personName.setText(persons.get(i).nombre);
         personViewHolder.personAge.setText(persons.get(i).direccion);
         personViewHolder.personTel.setText(persons.get(i).telefono);
+        personViewHolder.personId.setText(persons.get(i).id_person);
+        personViewHolder.datacliente.setText(persons.get(i).data);
         personViewHolder.personPhoto.setImageResource(R.mipmap.carrito_compras);
+
         //personViewHolder.itemView = persons.get(i).photoId);
 
 
@@ -153,9 +183,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     }
     static class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
         private Context context;
-        private int position;
-        public MyMenuItemClickListener(Context context,int position) {
-            //this.position=positon;
+        private String datacliente;
+        private String datavendedor;
+
+        public MyMenuItemClickListener(Context context,String datacliente,String datavendedor) {
+            this.datacliente = datacliente;
+            this.datavendedor = datavendedor;
             this.context = context;
         }
 
@@ -165,15 +198,16 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
                 case R.id.opcion1:
 
-                    Intent regist = new Intent(context, jesu.acondesa_servicio_al_cliente.RegistrarPedido.class);
-                    context.startActivity(regist);
+
                     return true;
                 case R.id.opcion2:
-                    /*
-                    mDataSet.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position,mDataSet.size());
-                    Toast.makeText(MainActivity.context, "Done for now", Toast.LENGTH_SHORT).show();*/
+                    Intent regist = new Intent(context, jesu.acondesa_servicio_al_cliente.RegistrarPedido.class);
+                    //poner variable en el Bundle del intent para ser usada en la otra activity
+                    regist.putExtra("datacliente",datacliente);
+                    //poner variable en el Bundle del intent para ser usada en la otra activity
+                    regist.putExtra("datavendedor",datavendedor);
+
+                    context.startActivity(regist);
                     return true;
 
                 default:

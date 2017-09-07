@@ -38,13 +38,13 @@
             android:weightSum="1">
 
             <AutoCompleteTextView
-                android:id="@+id/email"
+                android:id="@+id/usuario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_usuario"
+                android:inputType="none"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:inputType="none" />
+                android:singleLine="true" />
 
             <EditText
                 android:id="@+id/password"
@@ -59,16 +59,16 @@
                 android:singleLine="true" />
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/usuario_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="246dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold"
                 android:background="@color/colorPrimary"
+                android:text="@string/action_sign_in"
                 android:textColor="@android:color/white"
-                android:layout_gravity="center_horizontal" />
+                android:textStyle="bold" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

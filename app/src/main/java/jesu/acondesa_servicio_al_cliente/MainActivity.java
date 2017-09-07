@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     String password = "";
-    String email = "";
+    String usuario = "";
 
 
     /**
@@ -69,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
         // para mantener la ultima sesion y asi el ultimo estado de la app
         Context context = MainActivity.this;
         sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-        email = sharedPreferences.getString("email", "none");
+        usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
-        if (password.equals("none") && email.equals("none")) {
+        if (password.equals("none") && usuario.equals("none")) {
             //enviar al login
             Intent intent = new Intent(context, LoginActivity.class);
 
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString("email", email);
+        editor.putString("usuario", usuario);
         editor.putString("password", password);
         editor.commit();
     }
@@ -101,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = MainActivity.this;
         sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-        email = sharedPreferences.getString("email", "none");
+        usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
-        if (password.equals("none") && email.equals("none")) {
+        if (password.equals("none") && usuario.equals("none")) {
             //enviar al login
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 
@@ -125,17 +125,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "By Jesus Suarez", Snackbar.LENGTH_LONG);
-                        //.setAction("Action", null).show();
-                //Intent MainActivity3 = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.cliente.class);
-                //startActivity(MainActivity3);
-
-            }
-        });
 
     }
 

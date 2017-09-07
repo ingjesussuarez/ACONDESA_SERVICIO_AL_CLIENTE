@@ -9,40 +9,119 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="bootstrap/css/jquery-ui.css"/>
 <style type="text/css">
 	.table-sortable tbody tr {
     cursor: move;
 }
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal2 {
 
+    display:    none;
+    position:   fixed;
+    z-index:    99;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+                url('images/loader.gif')
+                50% 50% / 80px 
+                no-repeat;
+    
+    
+}
+.texto{
+    
+    z-index: 200;
+    top: 50%;
+    left: 50%;
+    text-align: center;    
+    vertical-align: middle;
+    position: absolute;
+    margin-top: 40px;
+    margin-left: -125px;
+    
+}
+.prec{
+
+    text-align: center;
+    margin-top: 12px;
+    position: relative;
+    vertical-align: middle;
+}
+.it{
+	font-weight: bold;
+ 	vertical-align: middle;
+ 	text-align: center;
+ 	color: #2e6da4;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal2 {
+    display: block;
+}
 </style>
 </head>
-<body>
+<body class="loading">
+
+<div class="modal2"><div class="texto"></div><!-- Place at bottom of page --></div>
+
 <div class="container">
-<div class="row">
+    <div class="row">
+        <a id="send_pedido" class="btn btn-success col-xs-12 col-md-12 col-lg-12" onclick="attemptEnviarPedido();" >ENVIAR PEDIDO</a>
+        
+    </div>
+    <div class="row">
+
     <div class="col-xs-6">
         Consecutivo:
     </div>
-    <div class="col-xs-6" style="text-align: right;">
-        23423524
+    <div class="col-xs-6" style="text-align: right;" id="ConsecutivoText">
+        
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-6">
+    <div class="col-xs-6"  >
         Fecha:
     </div>
-    <div class="col-xs-6" style="text-align: right;">
-        2016-05-13
+    <div class="col-xs-6" style="text-align: right;" id="FechaText">
+        
     </div>
 </div>
 <div class="row">
     <div class="col-xs-3">
         Cliente:
     </div>
-    <div class="col-xs-9" style="text-align: right;">
-        TIENDA CHARI [ID:104]
+    <div class="col-xs-9" style="text-align: right;" id="NombreText">
+        
     </div>
+    <input type="hidden" name='id_cliente' id="id_cliente" value="" />
+    <input type="hidden" name='id_rutero' id="id_rutero" value="" />
+    <input type="hidden" name='codvendedor' id="codvendedor" value="" />
+    <input type="hidden" name='id_vendedor' id="id_vendedor" value="" />
+    <input type="hidden" name='nombrecliente' id="nombrecliente" value="" />
+    <input type="hidden" name='consecutivo' id="consecutivo" value="" />
+</div>    
+<div class="row">
+    <div class="col-xs-3 col-md-2 col-lg-2">
+<a class="btn btn-danger " onclick="limpiarFormulario();">Limpiar</a>
+    </div>
+    <div class="col-xs-5 col-md-2 col-lg-2">
+        <a id="add_row"  class="btn btn-primary" >Nuevo producto</a>
+    </div>   
 </div>
-<label></label>
     <div class="row clearfix">
     	<div class="col-md-12" style="border: 0px">
 			<table class="table  table-hover table-sortable" id="tab_logic" >
@@ -64,19 +143,16 @@
 				</thead>
 				<tbody>
     				<tr id='addr0' data-id="0" class="hidden">
-						<td data-name="name" class="col-xs-5 col-md-5">
-						    <select name="sel0" class="form-control">
-                                <option value"">Select Option</option>
-                                <option value"1">Option 1</option>
-                                <option value"2">Option 2</option>
-                                <option value"3">Option 3</option>
+						<td data-name="name" id="name" data-id="name" class="col-xs-5 col-md-5">
+						    <select name="sel0" id="sel0" newid="" class="form-control producto" onchange="calcularTotal(this);">
+                                
                             </select>
 						</td>
-                        <td data-name="cant" class="col-xs-2 col-md-2" >
-                            <input type="number" name='cantidad'  class="form-control"/>
+                        <td data-name="cant" data-id="cant" class="col-xs-2 col-md-2" >
+                            <input type="number" name='cantidad0' id="cantidad0" newid=""  class="form-control cantidad" value=""  onkeyup="calcularTotal(this);" />
                         </td>
-						<td data-name="prec" class="col-xs-3 col-md-3">
-						    <input type="number" name='precio'  class="form-control" readonly="true" />
+						<td data-name="prec" id="prec" data-id="prec" style="vertical-align: middle;" class="prec col-xs-3 col-md-3">
+						    <div class="it" name='precio0' id="precio0" newid=""   value=""  ></div>
 						</td>
 						
     					
@@ -88,17 +164,270 @@
 			</table>
 		</div>
 	</div>
-	<a id="add_row" class="btn btn-default pull-right">Add Row</a>
+	
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p id="modal-mesg">Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-negative-btn">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-positive-btn">Accept</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 </body>
 <script src="jquery.min.js"></script>
 <script src="jquery-ui.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
-<!--AJAX para traer productos -->
 
-<!-- FIN AJAX para traer productos -->
 <script type="text/javascript">
+// funciones de interfaz de Android -----------------------------------------------
+    function set_datos_pedido(cliente,vendedor,otradata){
+   
+    
+        //alert(data);
+        c = JSON.parse(cliente);
+        v = JSON.parse(vendedor);
+        o = JSON.parse(otradata);
+    //Android.showToast("id_rutero: "+c.id_rutero,4000);    
+       // alert(item.nombre);
+ $("#codvendedor").val(v.codvendedor);
+ $("#id_vendedor").val(v.idvendedor);
+ $("#id_cliente").val(c.id_cliente);
+ $("#nombrecliente").val(c.nombrecliente);
+ document.getElementById("NombreText").innerHTML = c.nombrecliente;
+ $("#id_rutero").val(c.id_rutero);
+ $("#consecutivo").val(o.consecutivo);
+        document.getElementById("ConsecutivoText").innerHTML = o.consecutivo;
+        document.getElementById("FechaText").innerHTML = o.fecha;
+      
+   }
+// ------------------------------------ fin de funciones de interfaz de Android 
+
+
+function calcularTotal(element){
+    
+    var newid = $(element).attr("newid");
+	var sel = document.getElementById('name'+newid);
+	var option = sel.options[sel.selectedIndex];
+	var precio = parseInt($(option).attr("precio"));
+	var factor = parseInt($(option).attr("factor"));
+	var cantidad = parseInt($("#cant"+newid).val());;
+	if (precio == undefined) precio = 0;
+	if (factor == undefined) factor = 0;
+	if (cantidad == undefined) cantidad = 0;
+	var precioTotal = precio*factor*cantidad;
+		$("#prec"+newid).html(precioTotal);
+}
+function comprobarProductos(){
+	var contador = 0;
+	var cantidad;
+	$.each($("#tab_logic tr"),function(){
+			
+			
+			cantidad = $(this).find("td input.cantidad").val();
+			
+
+			if(parseInt(cantidad) > 0){
+			
+			contador++;
+			}
+	});
+		
+		
+		if(contador <= 0){
+			//alert("No ha agregado productos al pedido");
+			Android.showDialog("Error","No ha agregado productos al pedido",false,"OK","","");
+
+			return false;	
+		}
+
+		return true;
+}
+function attemptEnviarPedido(){
+if(!comprobarProductos())
+		return false;
+        
+	
+
+	$("#modal-title").html("Enviar Pedido");
+	$("#modal-mesg").html("¿Está seguro de enviar este pedido?");
+	$("#modal-positive-btn" ).html("SI");
+	     $("#modal-positive-btn" ).on("click",function(){
+	     	enviarPedido();
+
+//alert('presionaste SI');
+	     } );
+	      $("#modal-negative-btn" ).html("NO");
+	     $("#modal-negative-btn" ).on("click",function(){
+//alert('presionaste NO')
+	     } );
+	     $("#myModal").modal('show');
+	
+}
+function enviarPedido(){
+
+	$(".texto").html("Enviando pedido, por favor espere...");
+	//recoger datos del pedido
+	var consecutivo = $("#consecutivo").val();
+	
+	var idcliente = $("#id_cliente").val();
+	var codvendedor = $("#codvendedor").val();
+	var idrutero = $("#id_rutero").val();
+	var latitud = "prueba";
+	var longitud = "prueba";
+	//recoger productos ---------------
+		var idproducto;
+		var cantidad;
+		var contador = 0;
+		var JSONstringProductos = '[';
+		var JSONstringCantidad = '[';
+		var recordProducto;
+		var recordCantidad;
+		
+	$.each($("#tab_logic tr"),function(){
+			
+			idproducto = $(this).find("td select.producto").val();
+			cantidad = $(this).find("td input.cantidad").val();
+			
+
+			if(parseInt(cantidad) > 0){
+				recordProducto = '{"producto":"'+idproducto+'"}'; 
+				recordCantidad = '{"cantidad":"'+cantidad+'"}'; 
+				
+				
+				if(contador > 0){
+				recordProducto =  ','+recordProducto;
+				recordCantidad = ','+recordCantidad;
+				
+				}
+					JSONstringProductos +=  recordProducto;
+					JSONstringCantidad += recordCantidad;
+				
+			contador++;
+			}
+	});
+		JSONstringProductos += ']';
+		JSONstringCantidad += ']';
+		if(contador <= 0){
+			//alert("No ha agregado productos al pedido");
+			//Android.showDialog("Mensaje","No ha agregado productos al pedido",false,"OK","","");
+			return;	
+		}
+	//---------------------------------
+	var datas = {
+        //todos los parametros a ser enviados
+     
+     consecutivo: consecutivo,//consecutivo,
+     tienda: idcliente,//idcliente,
+     vendedor: codvendedor,//codvendedor,
+     producto: JSONstringProductos,//aqui va un array de objetos,
+     cantidad: JSONstringCantidad, //array con las cantidades
+     rutero: idrutero,
+     latitud: latitud,
+     longitud: longitud//idrutero //aqui va rutero   
+    }
+        //enviar el pedido por ajax
+    $.ajax({
+    	url: "http://movilwebacondesa.com/movilweb/app3/EnviarPedido.php",
+    	data: datas,
+    	method: "POST",
+    	
+    	success:   function(data){
+           		alert(data);
+          			 //Android.showToast(data,4000);
+        		response = JSON.parse(data);
+        		if(response.validacion == "true"){
+        			Android.showToast("Pedido Enviado con Exito",4000);
+        			//alert("Pedido enviado con exito!");
+        			limpiarFormulario();// quita la lista de productos
+        			Android.cerrar();
+        		}
+        		else{
+        			//alert("error: "+response.validacion)
+        			Android.showToast("Hubo un error al enviar el pedido",4000);
+        		}
+        
+        			$(".texto").html("");
+       			},
+       	error: function(e){
+       		alert('error');
+       	}
+       			
+
+    });    
+     
+}
+function limpiarFormulario(){
+    //limpiar tabla
+    $.each($("#tab_logic tbody tr"),function(){
+           var tr = $(this);
+           $(tr).find("td button.row-remove").trigger("click");
+    });
+}
+// -------------------------------------- ON DOCUMENT READY() -----------------------------------------------------
 	$(document).ready(function() {
+     
+	var productos = new Object();
+	
+	var codvendedor = $("#codvendedor").val();
+	
+
+//	loader modal /---------------------------------------------------------
+$body = $("body");
+
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); callback();}    
+});
+//-------------------------------------------------------- fin loader modal
+$(".texto").html("Cargando productos, por favor espere...");
+$.post("http://movilwebacondesa.com/movilweb/app3/MuestraProducto.php",
+    {
+     
+    },
+    function(data, status){
+        //alert("Data: " + data + "\nStatus: " + status);
+        //productos = data;
+        productos = JSON.parse(data);
+      //alert(data);
+       $(".texto").html("");
+       
+    });    	
+    
+function callback(){
+    
+
+function llenarSelect(id){
+	var optionsHTML = ""; 
+   var option = "";
+   for(var i in productos) {
+    optionsHTML += '<option value="'+productos[i].id+'" precio="'+productos[i].precio+'" factor="'+productos[i].factor+'" iva="'+productos[i].iva+'" >'+productos[i].nomproducto+'</option>';  // (o el campo que necesites)
+
+}
+
+var newid = "name"+id;
+
+var select = document.getElementById(newid);
+
+	select.innerHTML = optionsHTML;
+
+}
+
+
+
+
     $("#add_row").on("click", function() {
         // Dynamic Rows Code
         
@@ -125,11 +454,15 @@
             // add new td and element if it has a nane
             if ($(this).data("name") != undefined) {
                 var td = $("<td></td>", {
-                    "data-name": $(cur_td).data("name")
+                    "data-name": $(cur_td).data("name"),
+                    "data-id": $(cur_td).data("id")
+                    
                 });
                 
                 var c = $(cur_td).find($(children[0]).prop('tagName')).clone().val("");
                 c.attr("name", $(cur_td).data("name") + newid);
+                c.attr("id", $(cur_td).data("id") + newid);
+                c.attr("newid",  newid);
                 c.appendTo($(td));
                 td.appendTo($(tr));
             } else {
@@ -150,7 +483,12 @@
         */
         
         // add the new row
-        $(tr).appendTo($('#tab_logic'));
+        //$(tr).appendTo($('#tab_logic'));
+        
+        $('#tab_logic').prepend($(tr));        
+        $("#prec"+newid).html("");
+        llenarSelect(newid);
+
         
         $(tr).find("td button.row-remove").on("click", function() {
              $(this).closest("tr").remove();
@@ -180,6 +518,7 @@
 
 
 
-    $("#add_row").trigger("click");
+    //$("#add_row").trigger("click");
+}
 });
 </script>

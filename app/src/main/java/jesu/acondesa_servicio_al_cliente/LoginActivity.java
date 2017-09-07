@@ -34,14 +34,14 @@ import org.json.JSONObject;
 
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via usuario/password.
  */
 public class LoginActivity extends AppCompatActivity {
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView mUserView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -51,10 +51,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mUserView = (AutoCompleteTextView) findViewById(R.id.usuario);
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        //btnconsultar = (Button)findViewById(R.id.email_sign_in_button);
+        
         sharedPreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
 
 
@@ -69,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mUserSignInButton = (Button) findViewById(R.id.usuario_sign_in_button);
+        mUserSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
@@ -84,37 +84,37 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
+     * If there are form errors (invalid usuario, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
 
         // Reset errors.
-        mEmailView.setError(null);
+        mUserView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        final String email = mEmailView.getText().toString();
+        final String usuario = mUserView.getText().toString();
         final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+        // Check for a valid password, if the usuario entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        // Check for a valid usuario address.
+        if (TextUtils.isEmpty(usuario)) {
+            mUserView.setError(getString(R.string.error_field_required));
+            focusView = mUserView;
             cancel = true;
-        } else if (isEmailValid(email)) {
-            mEmailView.setError("Ingrese un codigo de usuario valido");
-            focusView = mEmailView;
+        } else if (isUserValid(usuario)) {
+            mUserView.setError("Ingrese un codigo de usuario valido");
+            focusView = mUserView;
             cancel = true;
         }
 
@@ -124,11 +124,11 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // perform the usuario login attempt.
             showProgress(true);
-           // mAuthTask = new UserLoginTask(email, password);
+
             RequestQueue peticiones = Volley.newRequestQueue(getApplicationContext());
-            String url = "http://movilwebacondesa.com/movilweb/app3/ValidaUser.php?usuario="+email+"&password="+password;
+            String url = "http://movilwebacondesa.com/movilweb/app3/ValidaUser.php?usuario="+usuario+"&password="+password;
             final int MAX_TIMEOUT_CONECTION = 60000;//tiempo en milisegundos para el tiempo de espera
             // , si se supera este tiempo y no se recibe respuesta, se reintenta la peticion tantas veces como este configurada
             // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
@@ -144,15 +144,21 @@ public class LoginActivity extends AppCompatActivity {
                             showProgress(false);
                             try {
                                 String validation = resp.getString("validacion");
+                                String nombvendedor = resp.getString("nomvendedor");
+                                String idvendedor = resp.getString("idvendedor");
+                                String codvendedor = resp.getString("codigo");
                                 //Toast.makeText(LoginActivity.this, validation, Toast.LENGTH_LONG).show();
                                 if(validation.equals("ok")){
                                     //abrimos el editor de sesiones y guardamos las credenciales en la sesion
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putString("email",email); // insertando el usuario
+                                    editor.putString("usuario",usuario); // insertando el usuario
                                     editor.putString("password",password); // insertando la clave
+                                    editor.putString("nomvendedor",nombvendedor); // insertando el nombre del vendedor
+                                    editor.putString("idvendedor",idvendedor); // insertando el id del vendedor
+                                    editor.putString("codvendedor",codvendedor); // insertando el codigo del vendedor
                                     editor.commit(); // guardar datos
                                     mPasswordView.setText("");
-                                    //mEmailView.setText("");
+                                    //mUserView.setText("");
                                     Intent MainActivity = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.MainActivity.class);
                                     startActivity(MainActivity);
 
@@ -184,9 +190,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isEmailValid(String email) {
+    private boolean isUserValid(String usuario) {
         //TODO: Replace this with your own logic
-        return email.contains(".");
+        return usuario.contains(".");
     }
 
     private boolean isPasswordValid(String password) {
