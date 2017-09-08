@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="bootstrap/css/jquery-ui.css"/>
+
 <style type="text/css">
 	.table-sortable tbody tr {
     cursor: move;
@@ -130,13 +130,13 @@ body.loading .modal2 {
 						<th class="text-center col-xs-5 col-md-5">
 							Producto
 						</th>
-						<th class="text-center col-xs-2 col-md-2">
+						<th class="text-center col-xs-3 col-md-3">
 							Cant
 						</th>
 						<th class="text-center col-xs-3 col-md-3">
 							Precio
 						</th>
-    					<th class="text-center col-xs-2 col-md-2">
+    					<th class="text-center col-xs-1 col-md-1">
 							
 						</th>
 					</tr>
@@ -144,11 +144,11 @@ body.loading .modal2 {
 				<tbody>
     				<tr id='addr0' data-id="0" class="hidden">
 						<td data-name="name" id="name" data-id="name" class="col-xs-5 col-md-5">
-						    <select name="sel0" id="sel0" newid="" class="form-control producto" onchange="calcularTotal(this);">
+						    <select name="sel0" id="sel0" newid="" class="form-control producto" onchange="calcularTotal(this);$('#cant'+$(this).attr('newid')).focus();">
                                 
                             </select>
 						</td>
-                        <td data-name="cant" data-id="cant" class="col-xs-2 col-md-2" >
+                        <td data-name="cant" data-id="cant" class="col-xs-3 col-md-3" >
                             <input type="number" name='cantidad0' id="cantidad0" newid=""  class="form-control cantidad" value=""  onkeyup="calcularTotal(this);" />
                         </td>
 						<td data-name="prec" id="prec" data-id="prec" style="vertical-align: middle;" class="prec col-xs-3 col-md-3">
@@ -156,7 +156,7 @@ body.loading .modal2 {
 						</td>
 						
     					
-                        <td data-name="del" class="col-xs-2 col-md-2">
+                        <td data-name="del" class="col-xs-1 col-md-1">
                             <button nam"del0" class='btn btn-danger glyphicon glyphicon-remove row-remove' style="border-radius: 25px"></button>
                         </td>
 					</tr>
@@ -173,14 +173,14 @@ body.loading .modal2 {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="modal-title">Modal Header</h4>
+        <h4 class="modal-title" id="modal-title">Titulo aqui</h4>
       </div>
       <div class="modal-body">
-        <p id="modal-mesg">Some text in the modal.</p>
+        <p id="modal-mesg">Mensaje aqui</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-negative-btn">Close</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-positive-btn">Accept</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-negative-btn">Cerrar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-positive-btn">Aceptar</button>
       </div>
     </div>
 
@@ -204,10 +204,10 @@ body.loading .modal2 {
        // alert(item.nombre);
  $("#codvendedor").val(v.codvendedor);
  $("#id_vendedor").val(v.idvendedor);
- $("#id_cliente").val(c.id_cliente);
- $("#nombrecliente").val(c.nombrecliente);
+ $("#id_cliente").val(c.idsucursal);
+ $("#nombrecliente").val(c.nonbresucursal);
  document.getElementById("NombreText").innerHTML = c.nombrecliente;
- $("#id_rutero").val(c.id_rutero);
+ $("#id_rutero").val(c.id);
  $("#consecutivo").val(o.consecutivo);
         document.getElementById("ConsecutivoText").innerHTML = o.consecutivo;
         document.getElementById("FechaText").innerHTML = o.fecha;
@@ -234,14 +234,11 @@ function comprobarProductos(){
 	var contador = 0;
 	var cantidad;
 	$.each($("#tab_logic tr"),function(){
-			
-			
+						
 			cantidad = $(this).find("td input.cantidad").val();
 			
-
 			if(parseInt(cantidad) > 0){
-			
-			contador++;
+				contador++;
 			}
 	});
 		

@@ -108,7 +108,7 @@ public class ruta extends Fragment {
         //String diaHoy = dias[hoy.get(Calendar.DAY_OF_WEEK)-1];
         String diaHoy = "Martes";//para pruebas, borrar al entrar en produccion
         String url= "http://movilwebacondesa.com/movilweb/app3/MuestraRuta.php?usuario="+usuario+"&dia="+diaHoy;
-        Toast.makeText(this.getContext(), url, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this.getContext(), url, Toast.LENGTH_LONG).show();
 
         progress.setVisibility(View.VISIBLE);
 
@@ -125,13 +125,13 @@ public class ruta extends Fragment {
 
                     int length = jsonArrayPersons.length();
                     String[] nombres = new String[length];
-                    String[] nombreterceros = new String[length];
-                    String[] idterceros = new String[length];
-                    String[] zonas = new String[length];
+                    //String[] nombreterceros = new String[length];
+                    //String[] idterceros = new String[length];
+                    //String[] zonas = new String[length];
                     String[] direcciones = new String[length];
                     String[] telefonos = new String[length];
                     String[] datas = new String[length];
-                    String[] idruteros = new String[length];
+                    //String[] idruteros = new String[length];
                     String[] idsucursales = new String[length];
                     //a parte se necesitan idvendedor, numero consecutivo, codigovendedor y nombrevendedor
 
@@ -143,17 +143,21 @@ public class ruta extends Fragment {
                         direcciones[i] = jsonObject.getString("direccion");
                         telefonos[i] = jsonObject.getString("telefono");
                         idsucursales[i] = jsonObject.getString("idsucursal");
-                        nombreterceros[i] = jsonObject.getString("nombretercero");
+                     /*   nombreterceros[i] = jsonObject.getString("nombretercero");
                         idruteros[i] = jsonObject.getString("id");
                         idterceros[i] = jsonObject.getString("idtercero");
                         zonas[i] = jsonObject.getString("zona");
+                         */
 
                         //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente
                         // ser parseado a un Objeto JavaScript
-                        datas[i] = "{\"nombrecliente\":\"" +nombres[i]+ "\",\"id_cliente\":\"" +idsucursales[i]+ "\"," +
-                                "\"id_rutero\":\"" + idruteros[i] + "\"}";
+                        datas[i] = jsonObject.toString();
 
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],idsucursales[i],datas[i]);
+                        //datas[i] = "{\"nombrecliente\":\"" +nombres[i]+ "\",\"id_cliente\":\"" +idsucursales[i]+ "\"," +
+                        //        "\"id_rutero\":\"" + idruteros[i] + "\"}";
+
+                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],
+                                idsucursales[i],datas[i]);
                         persons.add(personObject);
                     }
                     initializeAdapter();

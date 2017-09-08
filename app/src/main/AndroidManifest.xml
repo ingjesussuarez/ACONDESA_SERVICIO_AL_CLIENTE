@@ -50,6 +50,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="jesu.acondesa_servicio_al_cliente.MainActivity" />
         </activity>
+        <activity
+            android:name=".VerDetallesActivity"
+            android:label="Detalles"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jesu.acondesa_servicio_al_cliente.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -194,20 +194,23 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
+            Intent intent;
             switch (menuItem.getItemId()) {
 
-                case R.id.opcion1:
-
-
+                case R.id.opcion1://ver cliente
+                    intent = new Intent(context, jesu.acondesa_servicio_al_cliente.VerDetallesActivity.class);
+                    //poner variable en el Bundle del intent para ser usada en la otra activity
+                    intent.putExtra("datacliente",datacliente);
+                    context.startActivity(intent);
                     return true;
                 case R.id.opcion2:
-                    Intent regist = new Intent(context, jesu.acondesa_servicio_al_cliente.RegistrarPedido.class);
+                    intent = new Intent(context, jesu.acondesa_servicio_al_cliente.RegistrarPedido.class);
                     //poner variable en el Bundle del intent para ser usada en la otra activity
-                    regist.putExtra("datacliente",datacliente);
+                    intent.putExtra("datacliente",datacliente);
                     //poner variable en el Bundle del intent para ser usada en la otra activity
-                    regist.putExtra("datavendedor",datavendedor);
+                    intent.putExtra("datavendedor",datavendedor);
 
-                    context.startActivity(regist);
+                    context.startActivity(intent);
                     return true;
 
                 default:

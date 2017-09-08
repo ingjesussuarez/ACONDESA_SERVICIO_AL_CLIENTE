@@ -97,22 +97,15 @@ public class pedidos extends Fragment {
     public void llenarpedidos(){
         pedidosList = new ArrayList<>();
         RequestQueue colaPeticiones = Volley.newRequestQueue(this.getContext().getApplicationContext());
-        String formatedDate = "";
-        SimpleDateFormat date;
+
         final int MAX_TIMEOUT_CONECTION = 60000;//tiempo en milisegundos para el tiempo de espera
         // , si se supera este tiempo y no se recibe respuesta, se reintenta la peticion tantas veces como este configurada
         // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
         final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
         // se muestra error, hay que manejar este evento
-        try{
-            date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            formatedDate = date.format(new Date());
-        }catch(Exception e){
-            e.printStackTrace();
 
-        }
 
-        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraPedidos.php?usuario="+usuario+"&fecha="+formatedDate;
+        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraPedidos.php?usuario="+usuario;
 
         progress.setVisibility(View.VISIBLE);
 
