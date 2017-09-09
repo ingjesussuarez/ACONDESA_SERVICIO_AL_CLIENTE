@@ -3,7 +3,6 @@ package jesu.acondesa_servicio_al_cliente;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -32,9 +32,17 @@ public class cliente extends AppCompatActivity {
     public RecyclerView rv;
     private RecyclerView.LayoutManager llm;
     private ProgressBar progress;
-    private ViewPager container;
+    private LinearLayout container;
+    RVAdapter adapter;
+    private String usuario = "";
+    private String password = "";
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
+
+    public cliente(){
+        persons = new ArrayList<>();
+        adapter = new RVAdapter(persons,0);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +51,10 @@ public class cliente extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         progress = (ProgressBar) findViewById(R.id.progress_clientes);
-        container = (ViewPager) findViewById(R.id.container);
+        container = (LinearLayout) findViewById(R.id.linearlayout);
+        sharedPreferences = this.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        usuario = sharedPreferences.getString("usuario", "none");
+        password = sharedPreferences.getString("password", "none");
 
         rv=(RecyclerView)this.findViewById(R.id.rv);
 
@@ -51,8 +62,10 @@ public class cliente extends AppCompatActivity {
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
         //new RVAdapter(this);
-        initializeData();
-        initializeAdapter();
+        if(persons.isEmpty())
+            llenarClientes();
+        else
+            initializeAdapter();
 
     }
     @Override
@@ -80,7 +93,6 @@ public class cliente extends AppCompatActivity {
     }
 
     private void initializeData(){
-        persons = new ArrayList<>();
         llenarClientes();
        /* persons.add(new Person("Jesus Suarez", "Calle 115 17 10", R.mipmap.carrito_compras,"76872232"));
         persons.add(new Person("Jorbel Perez", "Cra 45 70 55", R.mipmap.carrito_compras,"8769768"));
@@ -88,7 +100,7 @@ public class cliente extends AppCompatActivity {
     }
 
     private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(persons);
+        adapter = new RVAdapter(persons,0);
         rv.setAdapter(adapter);
     }
 
@@ -102,8 +114,8 @@ public class cliente extends AppCompatActivity {
             final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
             // se muestra error, hay que manejar este evento
 
-            String url= "http://movilwebacondesa.com/movilweb/app3/MuestraClientes.php";
-            //Toast.makeText(this.getContext(), url, Toast.LENGTH_LONG).show();
+            String url= "http://movilwebacondesa.com/movilweb/app3/MuestraClientes.php?usuario="+usuario;
+
 
             progress.setVisibility(View.VISIBLE);
             container.setVisibility(View.GONE);
@@ -112,13 +124,13 @@ public class cliente extends AppCompatActivity {
 
                 @Override
                 public void onResponse(String JSONresponse) {
-
+                    Toast.makeText(getApplicationContext(), "Obteniendo resultados...", Toast.LENGTH_SHORT).show();
                     JSONObject jsonObject=null;
 
                     try {
 
                         JSONArray jsonArrayPersons = new JSONArray(JSONresponse);
-
+                        //Toast.makeText(getApplicationContext(), jsonArrayPersons.toString(), Toast.LENGTH_SHORT).show();
                         int length = jsonArrayPersons.length();
                         String[] nombres = new String[length];
                         String[] direcciones = new String[length];
@@ -126,7 +138,7 @@ public class cliente extends AppCompatActivity {
                         String[] datas = new String[length];
                         String[] idclientes = new String[length];
                         //para obtener los datos del vendeor accedemos a las variables compartidas de la sesion y armamos una String en formato JSON
-
+                        /*
                         SharedPreferences sharedPreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
                         String usuario = sharedPreferences.getString("usuario", "none");
                         String idvendedor = sharedPreferences.getString("idvendedor", "none");
@@ -140,7 +152,7 @@ public class cliente extends AppCompatActivity {
                                 "\"idzona\":\"" + idzona + "\"," +
                                 "\"nomvendedor\":\"" + nomvendedor + "\"," +
                                 "\"codvendedor\":\"" + codvendedor+ "\"}";
-
+                            */
 
                         //a parte se necesitan idvendedor, numero consecutivo, codigovendedor y nombrevendedor
 
@@ -153,14 +165,12 @@ public class cliente extends AppCompatActivity {
                             telefonos[i] = jsonObject.getString("telefono");
                             idclientes[i] = jsonObject.getString("id");
 
-
-
                             //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente
                             // ser parseado a un Objeto JavaScript
                             datas[i] = jsonObject.toString();
 
                             Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],
-                                    idclientes[i],datas[i],datavendedor,false,false);
+                                    idclientes[i],datas[i],"",0,0);
                             persons.add(personObject);
                         }
                         initializeAdapter();

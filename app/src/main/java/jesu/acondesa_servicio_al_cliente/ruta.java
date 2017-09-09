@@ -46,7 +46,7 @@ public class ruta extends Fragment {
 
     public ruta(){
         persons = new ArrayList<>();
-        adapter = new RVAdapter(persons);
+        adapter = new RVAdapter(persons,1);
     }
 
 
@@ -80,7 +80,7 @@ public class ruta extends Fragment {
 
 
     private void initializeAdapter(){
-        adapter = new RVAdapter(persons);
+        adapter = new RVAdapter(persons,1);
         rv.setAdapter(adapter);
     }
 
@@ -115,8 +115,8 @@ public class ruta extends Fragment {
                     String[] telefonos = new String[length];
                     String[] datas = new String[length];
                     String[] idsucursales = new String[length];
-                    Boolean[] visitados = new Boolean[length];
-                    Boolean[] hizopedidos = new Boolean[length];
+                    int[] visitados = new int[length];
+                    int[] hizopedidos = new int[length];
                     //a parte se necesitan idvendedor, numero consecutivo, codigovendedor y nombrevendedor
 
                     for(int i=0;i< jsonArrayPersons.length();i++){
@@ -127,8 +127,8 @@ public class ruta extends Fragment {
                         direcciones[i] = jsonObject.getString("direccion");
                         telefonos[i] = jsonObject.getString("telefono");
                         idsucursales[i] = jsonObject.getString("idsucursal");
-                        visitados[i] = jsonObject.getBoolean("visitado");
-                        hizopedidos[i] = jsonObject.getBoolean("hizopedido");
+                        visitados[i] = jsonObject.getInt("visitado");
+                        hizopedidos[i] = jsonObject.getInt("hizopedido");
 
 
                         //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente

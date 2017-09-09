@@ -133,7 +133,7 @@ public class pedidos extends Fragment {
                         telefonos[i] = jsonObject.getString("fecha");
                         ids[i] = jsonObject.getString("id");
 
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],ids[i],"","",false,false);
+                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],ids[i],"","",0,0);
                         pedidosList.add(personObject);
                     }
                     initializeAdapter();

@@ -32,9 +32,11 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
         TextView personName;
         TextView personAge;
         TextView personTel;
+        TextView extradata;
+        TextView data;
         ImageView personPhoto;
         ImageButton menuButton;
-        private List personasList;
+
         private ItemClickListener clickListener;
 
 
@@ -46,6 +48,8 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
             personName = itemView.findViewById(R.id.person_name);
             personAge = itemView.findViewById(R.id.person_age);
             personTel = itemView.findViewById(R.id.person_tel);
+            data = itemView.findViewById(R.id.person_data);
+            extradata = itemView.findViewById(R.id.extra_data);
             personPhoto = itemView.findViewById(R.id.person_photo);
             menuButton = new ImageButton(itemView.getContext());
             menuButton= view.findViewById(R.id.imageButton);

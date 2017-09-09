@@ -58,8 +58,8 @@ public class VerDetallesActivity extends AppCompatActivity {
                 nomtercero.setText(object.getString("nombretercero"));
                 zona.setText(object.getString("zonadesc"));
                 telefono.setText(object.getString("telefono"));
-                final String longitud = "232422424";//object.getString("longitud");
-                final String latitud = "-353353434";//object.getString("latitud");
+                final String longitud = object.getString("longitud");
+                final String latitud = object.getString("latitud");
                 Button ubicacion = (Button) findViewById(R.id.ubicacion_btn);
                 Button sms = (Button) findViewById(R.id.sms_btn);
                 Button call = (Button) findViewById(R.id.llamar_btn);

@@ -25,6 +25,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     //    this.context = context;
     //}
     Context context;
+    int type;
 
 
 
@@ -41,12 +42,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         TextView extradata;
         ImageView personPhoto;
         ImageButton menuButton;
+        int type;
         public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
         SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
         private ItemClickListener clickListener;
+        static int tipomenu = 0;
 
-
-        PersonViewHolder(View itemView) {
+        PersonViewHolder(View itemView, final int type) { //type es un entero que me indica si esta clase se usa para rutas (1) o clientes(0)
+            //type se usa para usar un menu popup diferente en cada caso, para el caso de clientes y para el caso de rutas
             super(itemView);
             context = itemView.getContext();
             cv = itemView.findViewById(R.id.cv);
@@ -59,26 +62,36 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
             data = itemView.findViewById(R.id.person_data);
             extradata = itemView.findViewById(R.id.extra_data);
             menuButton = new ImageButton(itemView.getContext());
-            menuButton= view.findViewById(R.id.imageButton);
+            menuButton = view.findViewById(R.id.imageButton);
+
+            switch(type){
+
+            case 0: tipomenu = R.menu.menu_clientes2;break;
+             case 1: tipomenu = R.menu.menu_ruta;break;
+            default:
+
+            }
 
 
-            final String finalDatavendedor = extradata.getText().toString();
 
-            menuButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showPopupMenu(view,data.getText().toString(), finalDatavendedor);
-                }
-                private void showPopupMenu(View view,String datacliente,String datavendedor) {
-                    // inflate menu
-                    PopupMenu popup = new PopupMenu(view.getContext(),view );
-                    MenuInflater inflater = popup.getMenuInflater();
-                    inflater.inflate(R.menu.menu_ruta, popup.getMenu());
-                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(view.getContext(),datacliente,datavendedor));
-                    popup.show();
-                }
+                menuButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showPopupMenu(view, data.getText().toString(), extradata.getText().toString());
+                    }
 
-            });
+                    private void showPopupMenu(View view, String datacliente, String datavendedor) {
+                        // inflate menu
+                        PopupMenu popup = new PopupMenu(view.getContext(), view);
+                        MenuInflater inflater = popup.getMenuInflater();
+
+                        inflater.inflate(tipomenu, popup.getMenu());
+                        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(view.getContext(), datacliente, datavendedor,type));
+                        popup.show();
+                    }
+
+                });
+
             view.setOnClickListener(new View.OnClickListener() {
                @Override public void onClick(View v) {
                     menuButton.callOnClick();
@@ -101,8 +114,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
 
     List<Person> persons;
 
-    RVAdapter(List<Person> persons){
-        this.persons = persons;
+    RVAdapter(List<Person> persons,int type){
+        this.persons = persons; this.type = type;
     }
 
     @Override
@@ -113,7 +126,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
     @Override
     public PersonViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);
-        PersonViewHolder pvh = new PersonViewHolder(v);
+        PersonViewHolder pvh = new PersonViewHolder(v,type);
         return pvh;
     }
 
@@ -127,9 +140,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         personViewHolder.extradata.setText(persons.get(i).extradata);
         personViewHolder.personPhoto.setImageResource(R.mipmap.carrito_compras);
         int color = Color.rgb(255,255,255);
-        if(persons.get(i).hizopedido)
+        if(persons.get(i).hizopedido == 1)
             color = Color.rgb(238,254,205);
-        else if(!persons.get(i).hizopedido && persons.get(i).visitado){
+        else if(persons.get(i).hizopedido == 0 && persons.get(i).visitado == 1){
             color = Color.rgb(238,254,205);
         }
 
@@ -147,38 +160,58 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         private Context context;
         private String datacliente;
         private String datavendedor;
+        private int type;
 
-        public MyMenuItemClickListener(Context context,String datacliente,String datavendedor) {
+        public MyMenuItemClickListener(Context context,String datacliente,String datavendedor,int type) {
             this.datacliente = datacliente;
             this.datavendedor = datavendedor;
             this.context = context;
+            this.type = type;
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             Intent intent;
-            switch (menuItem.getItemId()) {
+            if (type == 1) {
+                switch (menuItem.getItemId()) {
 
-                case R.id.opcion1://ver cliente
-                    intent = new Intent(context, jesu.acondesa_servicio_al_cliente.VerDetallesActivity.class);
-                    //poner variable en el Bundle del intent para ser usada en la otra activity
-                    intent.putExtra("datacliente",datacliente);
-                    context.startActivity(intent);
-                    return true;
-                case R.id.opcion2:
-                    intent = new Intent(context, jesu.acondesa_servicio_al_cliente.RegistrarPedido.class);
-                    //poner variable en el Bundle del intent para ser usada en la otra activity
-                    intent.putExtra("datacliente",datacliente);
-                    //poner variable en el Bundle del intent para ser usada en la otra activity
-                    intent.putExtra("datavendedor",datavendedor);
+                    case R.id.opcion1://ver cliente
+                        intent = new Intent(context, jesu.acondesa_servicio_al_cliente.VerDetallesActivity.class);
+                        //poner variable en el Bundle del intent para ser usada en la otra activity
+                        intent.putExtra("datacliente", datacliente);
+                        context.startActivity(intent);
+                        return true;
+                    case R.id.opcion2:
+                        intent = new Intent(context, jesu.acondesa_servicio_al_cliente.RegistrarPedido.class);
+                        //poner variable en el Bundle del intent para ser usada en la otra activity
+                        intent.putExtra("datacliente", datacliente);
+                        //poner variable en el Bundle del intent para ser usada en la otra activity
+                        intent.putExtra("datavendedor", datavendedor);
 
-                    context.startActivity(intent);
-                    return true;
+                        context.startActivity(intent);
+                        return true;
 
-                default:
+                    default:
+                }
             }
-            return false;
-        }
+            if(type == 0){
+                switch (menuItem.getItemId()) {
+
+                    case R.id.opcion1://ver cliente
+                        intent = new Intent(context, jesu.acondesa_servicio_al_cliente.VerDetallesActivity.class);
+                        //poner variable en el Bundle del intent para ser usada en la otra activity
+                        intent.putExtra("datacliente", datacliente);
+                        context.startActivity(intent);
+                        return true;
+                    case R.id.opcion2:
+                        return true;
+
+                    default:
+                }
+            }
+
+                return false;
+            }
 
     }
 

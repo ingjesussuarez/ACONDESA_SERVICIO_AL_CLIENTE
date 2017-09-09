@@ -7,8 +7,8 @@ class Person {
     String id_person;
     String data;
     String extradata;
-    boolean hizopedido;
-    boolean visitado;
+    int hizopedido;
+    int visitado;
     int id_mipmap;
 
 
@@ -19,12 +19,12 @@ class Person {
         id_person = null;
         extradata = null;
         data = null;
-        visitado = false;
-        hizopedido = false;
+        visitado = 0;
+        hizopedido = 0;
         id_mipmap = 0;
     }
 
-    Person(String nomb, String dir, int id_mipmap, String tel,String id_person,String data,String extradata,boolean hizopedido,boolean visitado) {
+    Person(String nomb, String dir, int id_mipmap, String tel,String id_person,String data,String extradata,int hizopedido,int visitado) {
         this.nombre = nomb;
         this.direccion = dir;
         this.telefono = tel;
