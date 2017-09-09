@@ -1,25 +1,9 @@
 package jesu.acondesa_servicio_al_cliente;
 
-import android.app.Application;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
-import android.icu.util.GregorianCalendar;
-import android.icu.util.TimeZone;
-import android.renderscript.Allocation;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.media.MediaBrowserCompat;
-import android.support.v7.app.AlertDialog;
+import android.graphics.Color;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -32,27 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import java.sql.Time;
-import java.util.Date;
-import java.util.List;
 
 import java.util.List;
-import java.util.Locale;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
    // private static Context context;
@@ -72,10 +37,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         TextView personAge;
         TextView personTel;
         TextView personId;
-        TextView datacliente;
+        TextView data;
+        TextView extradata;
         ImageView personPhoto;
         ImageButton menuButton;
-        private List personasList;
         public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
         SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
         private ItemClickListener clickListener;
@@ -84,36 +49,25 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         PersonViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
-            cv = (CardView)itemView.findViewById(R.id.cv);
+            cv = itemView.findViewById(R.id.cv);
             view = itemView;
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
-            personTel = (TextView)itemView.findViewById(R.id.person_tel);
-            personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
-            personId = (TextView) itemView.findViewById(R.id.person_id);
-            datacliente = (TextView) itemView.findViewById(R.id.person_data);
+            personName = itemView.findViewById(R.id.person_name);
+            personAge = itemView.findViewById(R.id.person_age);
+            personTel = itemView.findViewById(R.id.person_tel);
+            personPhoto = itemView.findViewById(R.id.person_photo);
+            personId = itemView.findViewById(R.id.person_id);
+            data = itemView.findViewById(R.id.person_data);
+            extradata = itemView.findViewById(R.id.extra_data);
             menuButton = new ImageButton(itemView.getContext());
-            menuButton= (ImageButton) view.findViewById(R.id.imageButton);
-            //para obtener los datos del vendeor accedemos a las variables compartidas de la sesion y armamos una String en formato JSON
-            Context context = itemView.getContext();
-            SharedPreferences sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-            String usuario = sharedPreferences.getString("usuario", "none");
-            String idvendedor = sharedPreferences.getString("idvendedor", "none");
-            String nomvendedor = sharedPreferences.getString("nomvendedor", "none");
-            String codvendedor = sharedPreferences.getString("codvendedor", "none");
-            String datavendedor = "";
+            menuButton= view.findViewById(R.id.imageButton);
 
-            datavendedor =  "{\"usuario\":\""+usuario+"\"," +
-                            "\"idvendedor\":\"" + idvendedor + "\"," +
-                            "\"nomvendedor\":\"" + nomvendedor + "\"," +
-                            "\"codvendedor\":\"" + codvendedor+ "\"}";
 
-            final String finalDatavendedor = datavendedor;
+            final String finalDatavendedor = extradata.getText().toString();
 
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(view,datacliente.getText().toString(), finalDatavendedor);
+                    showPopupMenu(view,data.getText().toString(), finalDatavendedor);
                 }
                 private void showPopupMenu(View view,String datacliente,String datavendedor) {
                     // inflate menu
@@ -169,9 +123,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
         personViewHolder.personAge.setText(persons.get(i).direccion);
         personViewHolder.personTel.setText(persons.get(i).telefono);
         personViewHolder.personId.setText(persons.get(i).id_person);
-        personViewHolder.datacliente.setText(persons.get(i).data);
+        personViewHolder.data.setText(persons.get(i).data);
+        personViewHolder.extradata.setText(persons.get(i).extradata);
         personViewHolder.personPhoto.setImageResource(R.mipmap.carrito_compras);
+        int color = Color.rgb(255,255,255);
+        if(persons.get(i).hizopedido)
+            color = Color.rgb(238,254,205);
+        else if(!persons.get(i).hizopedido && persons.get(i).visitado){
+            color = Color.rgb(238,254,205);
+        }
 
+        personViewHolder.cv.setCardBackgroundColor(color);
         //personViewHolder.itemView = persons.get(i).photoId);
 
 

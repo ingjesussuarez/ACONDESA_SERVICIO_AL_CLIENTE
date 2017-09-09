@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
             cancel = true;
         }
 
+
         // Check for a valid usuario address.
         if (TextUtils.isEmpty(usuario)) {
             mUserView.setError(getString(R.string.error_field_required));
@@ -129,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
 
             RequestQueue peticiones = Volley.newRequestQueue(getApplicationContext());
             String url = "http://movilwebacondesa.com/movilweb/app3/ValidaUser.php?usuario="+usuario+"&password="+password;
+            Toast.makeText(LoginActivity.this, url, Toast.LENGTH_SHORT).show();
             final int MAX_TIMEOUT_CONECTION = 60000;//tiempo en milisegundos para el tiempo de espera
             // , si se supera este tiempo y no se recibe respuesta, se reintenta la peticion tantas veces como este configurada
             // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
@@ -147,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                                 String nombvendedor = resp.getString("nomvendedor");
                                 String idvendedor = resp.getString("idvendedor");
                                 String codvendedor = resp.getString("codigo");
+                                String idzona = resp.getString("idzona");
                                 //Toast.makeText(LoginActivity.this, validation, Toast.LENGTH_LONG).show();
                                 if(validation.equals("ok")){
                                     //abrimos el editor de sesiones y guardamos las credenciales en la sesion
@@ -156,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.putString("nomvendedor",nombvendedor); // insertando el nombre del vendedor
                                     editor.putString("idvendedor",idvendedor); // insertando el id del vendedor
                                     editor.putString("codvendedor",codvendedor); // insertando el codigo del vendedor
+                                    editor.putString("idzona",idzona); // insertando el codigo del vendedor
                                     editor.commit(); // guardar datos
                                     mPasswordView.setText("");
                                     //mUserView.setText("");
@@ -181,10 +185,10 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
                     showProgress(false);
-                    Toast.makeText(LoginActivity.this, "Error al conectar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Error al conectar: "+volleyError, Toast.LENGTH_SHORT).show();
                 }
             });
-            peticion.setShouldCache(true);
+
             peticion.setRetryPolicy(new DefaultRetryPolicy(MAX_TIMEOUT_CONECTION,MAX_RETRYS_CONECTION,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             peticiones.add(peticion);
         }

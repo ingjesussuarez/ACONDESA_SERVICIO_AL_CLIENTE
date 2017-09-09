@@ -1,17 +1,6 @@
 package jesu.acondesa_servicio_al_cliente;
 
-import android.app.Application;
-import android.content.ClipData;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.renderscript.Allocation;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -24,22 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import java.util.List;
 
 import java.util.List;
 
@@ -68,14 +41,14 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
         PersonViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
-            cv = (CardView)itemView.findViewById(R.id.cv);
+            cv = itemView.findViewById(R.id.cv);
             view = itemView;
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
-            personTel = (TextView)itemView.findViewById(R.id.person_tel);
-            personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            personName = itemView.findViewById(R.id.person_name);
+            personAge = itemView.findViewById(R.id.person_age);
+            personTel = itemView.findViewById(R.id.person_tel);
+            personPhoto = itemView.findViewById(R.id.person_photo);
             menuButton = new ImageButton(itemView.getContext());
-            menuButton= (ImageButton) view.findViewById(R.id.imageButton);
+            menuButton= view.findViewById(R.id.imageButton);
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

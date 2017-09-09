@@ -87,14 +87,16 @@
                 android:layout_height="100dp"
                 android:id="@+id/imageView"
                 android:src="@mipmap/movilwe"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="imagen de logo"/>
 
             <ImageView
                 android:layout_width="341dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView2"
                 android:src="@mipmap/acondesa"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="imagen de logo"/>
 
             <TextView
                 android:layout_width="wrap_content"

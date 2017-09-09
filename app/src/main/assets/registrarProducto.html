@@ -113,6 +113,7 @@ body.loading .modal2 {
     <input type="hidden" name='id_vendedor' id="id_vendedor" value="" />
     <input type="hidden" name='nombrecliente' id="nombrecliente" value="" />
     <input type="hidden" name='consecutivo' id="consecutivo" value="" />
+     <input type="hidden" name='idzona' id="idzona" value="" />
 </div>    
 <div class="row">
     <div class="col-xs-3 col-md-2 col-lg-2">
@@ -144,7 +145,7 @@ body.loading .modal2 {
 				<tbody>
     				<tr id='addr0' data-id="0" class="hidden">
 						<td data-name="name" id="name" data-id="name" class="col-xs-5 col-md-5">
-						    <select name="sel0" id="sel0" newid="" class="form-control producto" onchange="calcularTotal(this);$('#cant'+$(this).attr('newid')).focus();">
+						    <select name="sel0" id="sel0" newid="" class="form-control producto" onchange="calcularTotal(this);$('#cant'+$(this).attr('newid')).trigger('click');">
                                 
                             </select>
 						</td>
@@ -205,8 +206,9 @@ body.loading .modal2 {
  $("#codvendedor").val(v.codvendedor);
  $("#id_vendedor").val(v.idvendedor);
  $("#id_cliente").val(c.idsucursal);
- $("#nombrecliente").val(c.nonbresucursal);
- document.getElementById("NombreText").innerHTML = c.nombrecliente;
+ $("#nombrecliente").val(c.nombresucursal);
+ $("#idzona").val(c.idzona);
+ document.getElementById("NombreText").innerHTML = c.nombresucursal;
  $("#id_rutero").val(c.id);
  $("#consecutivo").val(o.consecutivo);
         document.getElementById("ConsecutivoText").innerHTML = o.consecutivo;
@@ -243,10 +245,10 @@ function comprobarProductos(){
 	});
 		
 		
-		if(contador <= 0){
+		if(contador == 0){
 			//alert("No ha agregado productos al pedido");
-			Android.showDialog("Error","No ha agregado productos al pedido",false,"OK","","");
-
+		Android.showDialog("Error","No ha agregado productos al pedido",false,"OK");
+alert("nj");
 			return false;	
 		}
 
@@ -281,7 +283,9 @@ function enviarPedido(){
 	
 	var idcliente = $("#id_cliente").val();
 	var codvendedor = $("#codvendedor").val();
+    var idvendedor = $("#id_vendedor").val();
 	var idrutero = $("#id_rutero").val();
+    var idzona = $("#idzona").val();
 	var latitud = "prueba";
 	var longitud = "prueba";
 	//recoger productos ---------------
@@ -327,8 +331,10 @@ function enviarPedido(){
         //todos los parametros a ser enviados
      
      consecutivo: consecutivo,//consecutivo,
-     tienda: idcliente,//idcliente,
-     vendedor: codvendedor,//codvendedor,
+     idsucursal: idcliente,//idcliente,
+     codvendedor: codvendedor,//codvendedor,
+     idvendedor: idvendedor,//idvendedor,
+     idzona: idzona,//idvendedor,
      producto: JSONstringProductos,//aqui va un array de objetos,
      cantidad: JSONstringCantidad, //array con las cantidades
      rutero: idrutero,
@@ -342,13 +348,14 @@ function enviarPedido(){
     	method: "POST",
     	
     	success:   function(data){
-           		alert(data);
+           		Android.showToast(data,4000);
           			 //Android.showToast(data,4000);
         		response = JSON.parse(data);
         		if(response.validacion == "true"){
+        			
         			Android.showToast("Pedido Enviado con Exito",4000);
         			//alert("Pedido enviado con exito!");
-        			limpiarFormulario();// quita la lista de productos
+        			//limpiarFormulario();// quita la lista de productos
         			Android.cerrar();
         		}
         		else{
@@ -373,6 +380,22 @@ function limpiarFormulario(){
            $(tr).find("td button.row-remove").trigger("click");
     });
 }
+function cargarProductos(){
+$(".texto").html("Cargando productos, por favor espere...");
+$.post("http://movilwebacondesa.com/movilweb/app3/MuestraProducto.php",
+    {
+     
+    },
+    function(data, status){
+        //alert("Data: " + data + "\nStatus: " + status);
+        //productos = data;
+        productos = JSON.parse(data);
+      //alert(data);
+       $(".texto").html("");
+       
+    });    	
+}
+
 // -------------------------------------- ON DOCUMENT READY() -----------------------------------------------------
 	$(document).ready(function() {
      
@@ -388,7 +411,9 @@ $(document).on({
     ajaxStart: function() { $body.addClass("loading");    },
      ajaxStop: function() { $body.removeClass("loading"); callback();}    
 });
+
 //-------------------------------------------------------- fin loader modal
+
 $(".texto").html("Cargando productos, por favor espere...");
 $.post("http://movilwebacondesa.com/movilweb/app3/MuestraProducto.php",
     {
@@ -402,7 +427,8 @@ $.post("http://movilwebacondesa.com/movilweb/app3/MuestraProducto.php",
        $(".texto").html("");
        
     });    	
-    
+
+
 function callback(){
     
 
@@ -419,6 +445,8 @@ var newid = "name"+id;
 var select = document.getElementById(newid);
 
 	select.innerHTML = optionsHTML;
+$('#name'+newid).trigger("click");
+select.click();
 
 }
 
@@ -485,7 +513,7 @@ var select = document.getElementById(newid);
         $('#tab_logic').prepend($(tr));        
         $("#prec"+newid).html("");
         llenarSelect(newid);
-
+        
         
         $(tr).find("td button.row-remove").on("click", function() {
              $(this).closest("tr").remove();

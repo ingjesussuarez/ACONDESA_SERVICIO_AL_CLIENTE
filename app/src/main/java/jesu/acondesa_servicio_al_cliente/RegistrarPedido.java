@@ -4,13 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -31,21 +27,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class RegistrarPedido extends AppCompatActivity {
 
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
+    SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     static WebView webview;
     String otradata = new String();
     String datacliente = "";
     String datavendedor = "";
     private View mProgressView;
-    private View mRegistroPedidoView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +51,7 @@ public class RegistrarPedido extends AppCompatActivity {
         datavendedor = bundle.getString("datavendedor");
 
         mProgressView = findViewById(R.id.progress_pedido);
-
+        sharedPreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
         webview = new WebView(this);
         webview = (WebView) findViewById(R.id.webview);
         WebSettings webSettings = webview.getSettings();
@@ -70,54 +62,8 @@ public class RegistrarPedido extends AppCompatActivity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setAllowFileAccess(true);
-        final Context c = this.getApplicationContext();
-        webview.addJavascriptInterface(new MyJavaScriptInterface(c){
-            @JavascriptInterface
-            public void cerrar() {
-                    cerrarActivity(c);
-
-            }
-            @JavascriptInterface
-            public void showDialog(String titulo, String msg, boolean cancelable, String okText, String noText, final String action) {
-                //funcion que se invoca desde el webview y recibe un string de mensaje y otro para el tipo de dialogo
-                // para mostrarlo un dialogo en la app
-                AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                dialog.setTitle(titulo);
-                dialog.setMessage(msg);
-                dialog.setCancelable(cancelable);
-                if (!okText.isEmpty()) {
-                    dialog.setPositiveButton(okText, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialoginterface, int i) {
-                            // accion al presionar el boton OK haciendo switch a la variable action
-                            switch (action) {
-                                case "enviar_pedido":
-                                    return;
-                                case "accion2":
-                                    return;
-                                default:
-                            }
-                        }
-                    });
-                }
-                if (!noText.isEmpty()) {
-                    dialog.setNegativeButton(noText, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialoginterface, int i) {
-                            // accion al presionar el boton cancelar
-                            switch (action) {
-                                case "accion1":
-                                    return;
-                                case "accion2":
-                                    return;
-                                default:
-                            }
-                        }
-                    });
-                }
-                dialog.show();
-            }
-        }, "Android");
+        final Context c = this;
+        webview.addJavascriptInterface(new MyJavaScriptInterface(c), "Android");
 
         //obtener los datos que faltan: fecha y numconsecutivo
         SharedPreferences sharedPreferences = this.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
@@ -127,8 +73,15 @@ public class RegistrarPedido extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void cerrarActivity(Context c){
-        finish();
+    public void cerrarActivity(){
+
+         finish();
+
+    }
+
+    @Override
+    public void onBackPressed(){
+
     }
 
     public void getOtraData(final String codvendedor){
@@ -195,6 +148,7 @@ public class RegistrarPedido extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_actualizar_productos) {
             //llamar a la funcion javascript para actualizar productos
+            webview.loadUrl("javascript:actualizar_productos();");
             return true;
         }
         if (id == R.id.action_cancelar) {
@@ -234,6 +188,96 @@ public class RegistrarPedido extends AppCompatActivity {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             webview.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    class MyJavaScriptInterface {
+        Context mContext;
+
+
+        MyJavaScriptInterface(Context c) {
+            mContext = c; // contexto
+        }
+
+        public MyJavaScriptInterface() {
+
+        }
+
+
+        @JavascriptInterface
+        public void showToast(String msg, int duracion) {
+            //funcion que se invoca desde el webview y recibe un string de mensaje y un entero para la duracion en ms,
+            // para mostrar un toast en la app
+            Toast.makeText(mContext, msg, duracion).show();
+        }
+
+        @JavascriptInterface
+        public void cerrar() {
+            cerrarActivity();
+
+        }
+        @JavascriptInterface
+        public void showDialog(String titulo, String msg, boolean cancelable, String okText, String noText, final String action) {
+            //funcion que se invoca desde el webview y recibe un string de mensaje y otro para el tipo de dialogo
+            // para mostrarlo un dialogo en la app
+            AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+            dialog.setTitle(titulo);
+            dialog.setMessage(msg);
+            dialog.setCancelable(cancelable);
+            if (!okText.isEmpty()) {
+                dialog.setPositiveButton(okText, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        // accion al presionar el boton OK haciendo switch a la variable action
+                        switch (action) {
+                            case "enviar_pedido":
+                                return;
+                            case "accion2":
+                                return;
+                            default:
+                        }
+                    }
+                });
+            }
+            if (!noText.isEmpty()) {
+                dialog.setNegativeButton(noText, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        // accion al presionar el boton cancelar
+                        switch (action) {
+                            case "accion1":
+                                return;
+                            case "accion2":
+                                return;
+                            default:
+                        }
+                    }
+                });
+            }
+            dialog.show();
+        }
+
+        @JavascriptInterface
+        public void showDialog(String titulo, String msg, boolean cancelable, String okText) {
+            //funcion que se invoca desde el webview y recibe un string de mensaje y otro para el tipo de dialogo
+            // para mostrarlo un dialogo en la app
+            AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+            dialog.setTitle(titulo);
+            dialog.setMessage(msg);
+            dialog.setCancelable(cancelable);
+            if (!okText.isEmpty()) {
+                dialog.setPositiveButton(okText, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                        // accion al presionar el boton OK haciendo switch a la variable action
+
+                    }
+                });
+            }
+
+            dialog.show();
+        }
+
+
     }
 
 

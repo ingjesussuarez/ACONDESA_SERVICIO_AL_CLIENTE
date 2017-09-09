@@ -16,5 +16,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView3"
         android:src="@mipmap/acondesa"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="imagen de logo"/>
 </LinearLayout>

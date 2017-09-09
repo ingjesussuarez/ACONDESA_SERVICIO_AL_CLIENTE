@@ -3,44 +3,27 @@ package jesu.acondesa_servicio_al_cliente;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
+    SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
+    String usuario = "";
+    String password = "";
+    boolean firstTimeSplash = false;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -50,10 +33,6 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
-    SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
-    String password = "";
-    String usuario = "";
 
 
     /**
@@ -64,18 +43,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        getIntent().getExtras();
-        //al resumir la aplicacion, obtener los datos de login guardados en sharedpreferences,
-        // para mantener la ultima sesion y asi el ultimo estado de la app
-        Context context = MainActivity.this;
-        sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
         usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
+        firstTimeSplash = sharedPreferences.getBoolean("firstTimeSplash", false);
+
+        //al resumir la aplicacion, obtener los datos de login guardados en sharedpreferences,
+        // para mantener la ultima sesion y asi el ultimo estado de la app
+
         if (password.equals("none") && usuario.equals("none")) {
             //enviar al login
-            Intent intent = new Intent(context, LoginActivity.class);
 
-            startActivity(intent);
             finish();
         }
 
@@ -88,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         Context context = MainActivity.this;
         sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
+        editor.putBoolean("firstTimeSplash",firstTimeSplash);
         editor.putString("usuario", usuario);
         editor.putString("password", password);
         editor.commit();
@@ -103,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = context.getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
         usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
+        firstTimeSplash = sharedPreferences.getBoolean("firstTimeSplash", false);
+
         if (password.equals("none") && usuario.equals("none")) {
             //enviar al login
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -179,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        //una variable compartida para saber si se hizo algun registro en pedidos y actualizar la lista de pedidos
+        private boolean hayPedidosPendientes = false;
 
         public PlaceholderFragment() {
 
@@ -201,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            TextView textView = rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
@@ -215,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
         resumen re = null;
         pedidos pe = null;
         ruta ru = null;
+        String hayPedidosPendientes = "no";
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
             this.re = null;
@@ -227,12 +210,16 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             //return PlaceholderFragment.newInstance(position + 1);
+            sharedPreferences = getApplicationContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+            hayPedidosPendientes = sharedPreferences.getString("hayPedidosPendientes", "no");
             switch (position) {
                 case 0: if(ru == null)
                             ru = new ruta();
                         return  ru;
                 case 1: if(pe == null)
                             pe = new pedidos();
+                        if(hayPedidosPendientes == "si")
+                            pe.llenarpedidos();
                         return pe;
                 case 2: if(re == null)
                             re = new resumen();

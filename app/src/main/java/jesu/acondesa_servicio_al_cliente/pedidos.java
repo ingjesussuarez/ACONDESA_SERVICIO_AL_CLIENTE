@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,17 +21,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,8 +58,8 @@ public class pedidos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_pedidos, container, false);
-        rv=(RecyclerView)rootView.findViewById(R.id.rv2);
-        numPedidos = (TextView) rootView.findViewById(R.id.num_pedidos);
+        rv= rootView.findViewById(R.id.rv2);
+        numPedidos = rootView.findViewById(R.id.num_pedidos);
 //pedidos
         rv.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -76,12 +69,13 @@ public class pedidos extends Fragment {
         usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
 
-        progress = (ProgressBar) rootView.findViewById(R.id.progressBar2);
+        progress = rootView.findViewById(R.id.progressBar2);
 
         if(pedidosList.isEmpty())
             llenarpedidos();
         else
             initializeAdapter();
+
 
         return rootView;
 
@@ -126,6 +120,7 @@ public class pedidos extends Fragment {
                     String[] nombres = new String[jsonArraypedidosList.length()];
                     String[] direcciones = new String[jsonArraypedidosList.length()];
                     String[] telefonos = new String[jsonArraypedidosList.length()];
+                    String[] ids = new String[jsonArraypedidosList.length()];
                     numeroPedidos = jsonArraypedidosList.length();
                     numPedidos.setText(String.valueOf(numeroPedidos));
 
@@ -136,8 +131,9 @@ public class pedidos extends Fragment {
                         nombres[i] = jsonObject.getString("nombresucursal");
                         direcciones[i] = jsonObject.getString("consecutivo");
                         telefonos[i] = jsonObject.getString("fecha");
+                        ids[i] = jsonObject.getString("id");
 
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],"","");
+                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],ids[i],"","",false,false);
                         pedidosList.add(personObject);
                     }
                     initializeAdapter();
@@ -164,6 +160,8 @@ public class pedidos extends Fragment {
         peticion.setShouldCache(true);
         peticion.setRetryPolicy(new DefaultRetryPolicy(MAX_TIMEOUT_CONECTION,MAX_RETRYS_CONECTION,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         colaPeticiones.add(peticion);
+
+
 
     }
 

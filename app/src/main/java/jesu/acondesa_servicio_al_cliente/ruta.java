@@ -4,12 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -20,14 +19,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +55,7 @@ public class ruta extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_ruta, container, false);
-        rv=(RecyclerView)rootView.findViewById(R.id.rv);
+        rv= rootView.findViewById(R.id.rv);
 //ruta
         rv.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -69,12 +65,13 @@ public class ruta extends Fragment {
         usuario = sharedPreferences.getString("usuario", "none");
         password = sharedPreferences.getString("password", "none");
 
-        progress = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progress = rootView.findViewById(R.id.progressBar);
 
         if(persons.isEmpty())
             llenarRuta();
         else
             initializeAdapter();
+
 
         return rootView;
 
@@ -95,19 +92,8 @@ public class ruta extends Fragment {
         // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
         final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
         // se muestra error, hay que manejar este evento
-        Calendar hoy = Calendar.getInstance();
-        String[] dias = new String[]{
-                "Domingo",
-                "Lunes",
-                "Martes",
-                "Miercoles",
-                "Jueves",
-                "Viernes",
-                "Sabado"
-        };
-        //String diaHoy = dias[hoy.get(Calendar.DAY_OF_WEEK)-1];
-        String diaHoy = "Martes";//para pruebas, borrar al entrar en produccion
-        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraRuta.php?usuario="+usuario+"&dia="+diaHoy;
+
+        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraRuta.php?usuario="+usuario;
         //Toast.makeText(this.getContext(), url, Toast.LENGTH_LONG).show();
 
         progress.setVisibility(View.VISIBLE);
@@ -125,14 +111,12 @@ public class ruta extends Fragment {
 
                     int length = jsonArrayPersons.length();
                     String[] nombres = new String[length];
-                    //String[] nombreterceros = new String[length];
-                    //String[] idterceros = new String[length];
-                    //String[] zonas = new String[length];
                     String[] direcciones = new String[length];
                     String[] telefonos = new String[length];
                     String[] datas = new String[length];
-                    //String[] idruteros = new String[length];
                     String[] idsucursales = new String[length];
+                    Boolean[] visitados = new Boolean[length];
+                    Boolean[] hizopedidos = new Boolean[length];
                     //a parte se necesitan idvendedor, numero consecutivo, codigovendedor y nombrevendedor
 
                     for(int i=0;i< jsonArrayPersons.length();i++){
@@ -143,21 +127,16 @@ public class ruta extends Fragment {
                         direcciones[i] = jsonObject.getString("direccion");
                         telefonos[i] = jsonObject.getString("telefono");
                         idsucursales[i] = jsonObject.getString("idsucursal");
-                     /*   nombreterceros[i] = jsonObject.getString("nombretercero");
-                        idruteros[i] = jsonObject.getString("id");
-                        idterceros[i] = jsonObject.getString("idtercero");
-                        zonas[i] = jsonObject.getString("zona");
-                         */
+                        visitados[i] = jsonObject.getBoolean("visitado");
+                        hizopedidos[i] = jsonObject.getBoolean("hizopedido");
+
 
                         //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente
                         // ser parseado a un Objeto JavaScript
                         datas[i] = jsonObject.toString();
 
-                        //datas[i] = "{\"nombrecliente\":\"" +nombres[i]+ "\",\"id_cliente\":\"" +idsucursales[i]+ "\"," +
-                        //        "\"id_rutero\":\"" + idruteros[i] + "\"}";
-
                         Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],
-                                idsucursales[i],datas[i]);
+                                idsucursales[i],datas[i],"",hizopedidos[i],visitados[i]);
                         persons.add(personObject);
                     }
                     initializeAdapter();
