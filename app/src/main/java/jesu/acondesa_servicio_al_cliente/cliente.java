@@ -124,7 +124,7 @@ public class cliente extends AppCompatActivity {
 
                 @Override
                 public void onResponse(String JSONresponse) {
-                    Toast.makeText(getApplicationContext(), "Obteniendo resultados...", Toast.LENGTH_SHORT).show();
+
                     JSONObject jsonObject=null;
 
                     try {
@@ -173,6 +173,7 @@ public class cliente extends AppCompatActivity {
                                     idclientes[i],datas[i],"",0,0);
                             persons.add(personObject);
                         }
+                        Toast.makeText(getApplicationContext(), "Resultados obtenidos", Toast.LENGTH_SHORT).show();
                         initializeAdapter();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -191,10 +192,24 @@ public class cliente extends AppCompatActivity {
                 }
             });
             peticion.setShouldCache(true);
+            Toast.makeText(getApplicationContext(), "Obteniendo resultados...", Toast.LENGTH_SHORT).show();
             peticion.setRetryPolicy(new DefaultRetryPolicy(MAX_TIMEOUT_CONECTION,MAX_RETRYS_CONECTION,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             colaPeticiones.add(peticion);
 
         }
+        @Override
+        public void onPause(){
+            super.onPause();
+            this.finish();
+        }
+        @Override
+        public void onStop(){
+            super.onStop();
+            this.finish();
+        }
+        @Override
+    public void onBackPressed(){
 
-
+            this.finish();
+        }
 }

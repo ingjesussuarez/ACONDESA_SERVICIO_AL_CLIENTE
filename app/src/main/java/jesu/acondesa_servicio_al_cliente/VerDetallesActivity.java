@@ -39,27 +39,37 @@ public class VerDetallesActivity extends AppCompatActivity {
         // Obtener datos desde Bundle
         Bundle bundle = getIntent().getExtras();
         String dataJson = bundle.getString("datacliente");
+        //Toast.makeText(this, "Recibido:"+dataJson, Toast.LENGTH_SHORT).show();
         JSONObject object = null;
         try {
             object = new JSONObject(dataJson);
 
-            if (object != null) {
+            if(object != null) {
                 TextView codcliente = (TextView) findViewById(R.id.codigo_cliente);
                 TextView nomcliente = (TextView) findViewById(R.id.nombre_cliente);
                 TextView dircliente = (TextView) findViewById(R.id.direccion_cliente);
                 TextView nomtercero = (TextView) findViewById(R.id.nombretercero_cliente);
                 TextView zona = (TextView) findViewById(R.id.zona_cliente);
                 final TextView telefono = (TextView) findViewById(R.id.telefono_cliente);
-
-                //los id's o indices aqui utilizados deben coincidir con los retornados desde PHP
+                Toast.makeText(this, object.toString(), Toast.LENGTH_SHORT).show();
+                //los id's o indices aqui utilizados deben coincidir con los retornados desde el servicio WEB
+                /*codcliente.setText("idsucursal");
+                nomcliente.setText("nombresucursal");
+                dircliente.setText("direccion");
+                nomtercero.setText("nombretercero");
+                zona.setText("zonadesc");
+                telefono.setText("telefono");
+                final String longitud = "22.33242";//object.getString("longitud");
+                final String latitud = "-32.42322";//object.getString("latitud");*/
                 codcliente.setText(object.getString("idsucursal"));
                 nomcliente.setText(object.getString("nombresucursal"));
                 dircliente.setText(object.getString("direccion"));
                 nomtercero.setText(object.getString("nombretercero"));
                 zona.setText(object.getString("zonadesc"));
                 telefono.setText(object.getString("telefono"));
-                final String longitud = object.getString("longitud");
-                final String latitud = object.getString("latitud");
+                final String longitud = "22.33242";//object.getString("longitud");
+                final String latitud = "-32.42322";//object.getString("latitud");
+
                 Button ubicacion = (Button) findViewById(R.id.ubicacion_btn);
                 Button sms = (Button) findViewById(R.id.sms_btn);
                 Button call = (Button) findViewById(R.id.llamar_btn);
