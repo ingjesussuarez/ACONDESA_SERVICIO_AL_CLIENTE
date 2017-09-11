@@ -137,6 +137,7 @@ public class cliente extends AppCompatActivity {
                         String[] telefonos = new String[length];
                         String[] datas = new String[length];
                         String[] idclientes = new String[length];
+                        String[] idsucursales = new String[length];
                         //para obtener los datos del vendeor accedemos a las variables compartidas de la sesion y armamos una String en formato JSON
                         /*
                         SharedPreferences sharedPreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);

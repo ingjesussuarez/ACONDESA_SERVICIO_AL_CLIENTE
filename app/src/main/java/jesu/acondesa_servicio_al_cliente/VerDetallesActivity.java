@@ -61,11 +61,11 @@ public class VerDetallesActivity extends AppCompatActivity {
                 telefono.setText("telefono");
                 final String longitud = "22.33242";//object.getString("longitud");
                 final String latitud = "-32.42322";//object.getString("latitud");*/
-                codcliente.setText(object.getString("idsucursal"));
+                codcliente.setText(object.getString("id"));
                 nomcliente.setText(object.getString("nombresucursal"));
                 dircliente.setText(object.getString("direccion"));
                 nomtercero.setText(object.getString("nombretercero"));
-                zona.setText(object.getString("zonadesc"));
+                zona.setText(object.getString("zona"));
                 telefono.setText(object.getString("telefono"));
                 final String longitud = "22.33242";//object.getString("longitud");
                 final String latitud = "-32.42322";//object.getString("latitud");

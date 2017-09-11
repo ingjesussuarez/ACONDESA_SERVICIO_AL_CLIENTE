@@ -200,6 +200,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> 
                     case R.id.opcion1://ver cliente
                         intent = new Intent(context, jesu.acondesa_servicio_al_cliente.VerDetallesActivity.class);
                         //poner variable en el Bundle del intent para ser usada en la otra activity
+                        Toast.makeText(context, "Enviado:"+datacliente, Toast.LENGTH_SHORT).show();
                         intent.putExtra("datacliente", datacliente);
                         context.startActivity(intent);
                         return true;
