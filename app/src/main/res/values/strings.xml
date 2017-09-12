@@ -140,4 +140,5 @@
     <string name="title_activity_cliente">Clientes</string>
     <string name="title_activity_registrar_pedido">RegistrarPedido</string>
     <string name="title_activity_ver_detalles">VerDetallesActivity</string>
+    <string name="title_activity_ver_pedidos">VerPedidosActivity</string>
 </resources>

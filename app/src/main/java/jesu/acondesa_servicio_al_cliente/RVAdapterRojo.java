@@ -1,6 +1,7 @@
 package jesu.acondesa_servicio_al_cliente;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -56,14 +57,14 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(view,2);
+                    showPopupMenu(view,extradata.getText().toString(),data.getText().toString());
                 }
-                private void showPopupMenu(View view,int position) {
+                private void showPopupMenu(View view,String data,String extradata) {
                     // inflate menu
                     PopupMenu popup = new PopupMenu(view.getContext(),view );
                     MenuInflater inflater = popup.getMenuInflater();
                     inflater.inflate(R.menu.menu_pedidos, popup.getMenu());
-                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
+                    popup.setOnMenuItemClickListener(new MyMenuItemClickListener(view.getContext(),data,extradata));
                     popup.show();
                 }
 
@@ -115,23 +116,27 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
         return persons.size();
     }
     static class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+        private Context context;
+        private String data;
+        private String extradata;
 
         private int position;
-        public MyMenuItemClickListener(int position) {
-            //this.position=positon;
+        public MyMenuItemClickListener(Context context, String data,String extradata) {
+            this.context=context;
+            this.data = data;
+            this.extradata= extradata;
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
 
-                case R.id.opcion1:
-                    // mDataSet.remove(position);
-                    //notifyItemRemoved(position);
-                    // notifyItemRangeChanged(position,mDataSet.size());
-                    /*
-                    mySharedPreferences.saveStringPrefs(Constants.REMOVE_CTAGURY,RemoveCategory,MainActivity.context);
-                    Toast.makeText(MainActivity.context, "Add to favourite", Toast.LENGTH_SHORT).show();*/
+                case R.id.opcion1: // ver pedido
+                    Intent intent = new Intent(context,jesu.acondesa_servicio_al_cliente.VerPedidoActivity.class);
+                    //poner variable en el Bundle del intent para ser usada en la otra activity
+                    //Toast.makeText(context, "Enviado:"+data, Toast.LENGTH_SHORT).show();
+                    intent.putExtra("datapedido", data);
+                    context.startActivity(intent);
                     return true;
                 case R.id.opcion2:
                     /*

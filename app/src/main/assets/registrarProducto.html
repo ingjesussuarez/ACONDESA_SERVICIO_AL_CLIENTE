@@ -79,9 +79,12 @@ body.loading .modal2 {
 <div class="modal2"><div class="texto"></div><!-- Place at bottom of page --></div>
 
 <div class="container">
-    <div class="row">
-        <a id="send_pedido" class="btn btn-success col-xs-12 col-md-12 col-lg-12" onclick="attemptEnviarPedido();" >ENVIAR PEDIDO</a>
+    <div class="row" style="float: right;">
+        <a id="send_pedido" class="btn btn-success btn-lg col-xs-12 col-md-12 col-lg-12" onclick="attemptEnviarPedido();" >ENVIAR</a>
         
+    </div>
+    <div class="row">
+        <h3>Total: <span id="totalpedido" style="color: #2e6da4;"></span></h3>
     </div>
     <div class="row">
 
@@ -229,8 +232,38 @@ function calcularTotal(element){
 	if (precio == undefined) precio = 0;
 	if (factor == undefined) factor = 0;
 	if (cantidad == undefined) cantidad = 0;
-	var precioTotal = precio*factor*cantidad;
+	//precio total por producto
+    var precioTotal = precio*factor*cantidad;
 		$("#prec"+newid).html(precioTotal);
+    //precio total del pedido
+    calcularTotalPedido();
+    
+
+}
+
+function calcularTotalPedido(){
+var id;
+    var preciop;
+    var preciop2;
+    var preciototal = 0;
+    
+    $.each($("#tab_logic tbody tr"),function(){
+        
+        id = $(this).attr("data-id");
+        
+        if(id != 0){
+            //alert(id);
+            preciop = $("#prec"+id).html();
+            if(preciop == undefined || preciop == null || preciop == "")
+                preciop = "0";
+                    
+                   preciop2 = parseInt(preciop); 
+                   preciototal = preciototal+preciop2;
+        }
+        
+
+    });    
+    $("#totalpedido").html(preciototal);
 }
 function comprobarProductos(){
 	var contador = 0;
@@ -248,7 +281,7 @@ function comprobarProductos(){
 		if(contador == 0){
 			//alert("No ha agregado productos al pedido");
 		Android.showDialog("Error","No ha agregado productos al pedido",false,"OK");
-alert("nj");
+
 			return false;	
 		}
 
@@ -257,11 +290,10 @@ alert("nj");
 function attemptEnviarPedido(){
 if(!comprobarProductos())
 		return false;
-        
-	
+
 
 	$("#modal-title").html("Enviar Pedido");
-	$("#modal-mesg").html("¿Está seguro de enviar este pedido?");
+	$("#modal-mesg").html("¿El total del pedido es: "+$("#totalpedido").html()+". Desea finalizarlo y enviarlo?");
 	$("#modal-positive-btn" ).html("SI");
 	     $("#modal-positive-btn" ).on("click",function(){
 	     	enviarPedido();
@@ -323,7 +355,7 @@ function enviarPedido(){
 		JSONstringCantidad += ']';
 		if(contador <= 0){
 			//alert("No ha agregado productos al pedido");
-			//Android.showDialog("Mensaje","No ha agregado productos al pedido",false,"OK","","");
+			Android.showDialog("Mensaje","No ha agregado productos al pedido",false,"OK","","");
 			return;	
 		}
 	//---------------------------------
@@ -348,7 +380,7 @@ function enviarPedido(){
     	method: "POST",
     	
     	success:   function(data){
-           		Android.showToast(data,4000);
+           		//Android.showToast(data,4000);
           			 //Android.showToast(data,4000);
         		response = JSON.parse(data);
         		if(response.validacion == "true"){
@@ -515,8 +547,9 @@ select.click();
         llenarSelect(newid);
         
         
-        $(tr).find("td button.row-remove").on("click", function() {
+        $(tr).find("td button.row-remove").on("click", function() {            
              $(this).closest("tr").remove();
+             calcularTotalPedido();
         });
 });
 

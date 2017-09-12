@@ -4,12 +4,16 @@
     <item
         android:id="@+id/opcion1"
         android:orderInCategory="100"
-        android:title="Opcion 1" />
+        android:title="Ver pedido" />
 
     <item
         android:id="@+id/opcion2"
         android:orderInCategory="101"
-        android:title="Opcion 2"></item>
+        android:title="Cancelar pedido"></item>
+    <item
+        android:id="@+id/opcion3"
+        android:orderInCategory="101"
+        android:title="Anular pedido"></item>
 
 
 </menu>

@@ -130,13 +130,18 @@ public class ruta extends Fragment {
                         visitados[i] = jsonObject.getInt("visitado");
                         hizopedidos[i] = jsonObject.getInt("hizopedido");
 
+                        sharedPreferences = getContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+                        String codvendedor = sharedPreferences.getString("codvendedor", "none");
+                        String idvendedor = sharedPreferences.getString("idvendedor", "none");
+
+                        String datavendedor = "{\"codvendedor\":\""+codvendedor+"\",\"idvendedor\":\""+idvendedor+"\"}";
 
                         //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente
                         // ser parseado a un Objeto JavaScript
                         datas[i] = jsonObject.toString();
 
                         Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],
-                                idsucursales[i],datas[i],"",hizopedidos[i],visitados[i]);
+                                idsucursales[i],datas[i],datavendedor,hizopedidos[i],visitados[i]);
                         persons.add(personObject);
                     }
                     initializeAdapter();

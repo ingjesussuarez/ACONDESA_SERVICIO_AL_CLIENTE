@@ -36,7 +36,7 @@ public class RegistrarPedido extends AppCompatActivity {
     static WebView webview;
     String otradata = new String();
     String datacliente = "";
-    String datavendedor = "";
+    static String datavendedor = "";
     private View mProgressView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class RegistrarPedido extends AppCompatActivity {
                                 otradata = resp.toString();
                         showProgress(false);
                         Toast.makeText(getApplicationContext(), "codvendedor: "+codvendedor+" otradadata: "+ otradata, Toast.LENGTH_LONG).show();
-                        webview.loadUrl("file:///android_asset/registrarProducto.html");
+                        webview.loadUrl("file:///android_asset/registrarProducto3.html");
                         //podemos cargar los datos del cliente usando la variable data, recibida desde el cardview seleccionado
                         // IMPORTANTE: se esto se hace solo despues que cargue la pagina completa (hasta el javascript),
                         // por eso se carga dentro de un WebViewClient para capturar el envento de fin de carga de la web,
