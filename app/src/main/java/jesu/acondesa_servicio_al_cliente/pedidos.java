@@ -121,6 +121,7 @@ public class pedidos extends Fragment {
                     String[] direcciones = new String[jsonArraypedidosList.length()];
                     String[] telefonos = new String[jsonArraypedidosList.length()];
                     String[] ids = new String[jsonArraypedidosList.length()];
+                    String[] datas = new String[jsonArraypedidosList.length()];
                     numeroPedidos = jsonArraypedidosList.length();
                     numPedidos.setText(String.valueOf(numeroPedidos));
 
@@ -132,8 +133,9 @@ public class pedidos extends Fragment {
                         direcciones[i] = jsonObject.getString("consecutivo");
                         telefonos[i] = jsonObject.getString("fecha");
                         ids[i] = jsonObject.getString("id");
+                        datas[i] = jsonObject.toString();
 
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],ids[i],"","",0,0);
+                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],ids[i],datas[i],"",1,1);
                         pedidosList.add(personObject);
                     }
                     initializeAdapter();

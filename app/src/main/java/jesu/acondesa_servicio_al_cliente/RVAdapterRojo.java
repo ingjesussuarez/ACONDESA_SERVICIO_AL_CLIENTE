@@ -57,7 +57,8 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopupMenu(view,extradata.getText().toString(),data.getText().toString());
+                    //Toast.makeText(view.getContext(),"data:"+ data.getText().toString(), Toast.LENGTH_SHORT).show();
+                    showPopupMenu(view,data.getText().toString(),extradata.getText().toString());
                 }
                 private void showPopupMenu(View view,String data,String extradata) {
                     // inflate menu
@@ -105,6 +106,8 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
         personViewHolder.personName.setText(persons.get(i).nombre);
         personViewHolder.personAge.setText(persons.get(i).direccion);
         personViewHolder.personTel.setText(persons.get(i).telefono);
+        personViewHolder.data.setText(persons.get(i).data);
+        personViewHolder.extradata.setText(persons.get(i).extradata);
         personViewHolder.personPhoto.setImageResource(R.drawable.boton_redondo_rojo);
         //personViewHolder.itemView = persons.get(i).photoId);
 
@@ -136,6 +139,7 @@ public class RVAdapterRojo extends RecyclerView.Adapter<RVAdapterRojo.PersonView
                     //poner variable en el Bundle del intent para ser usada en la otra activity
                     //Toast.makeText(context, "Enviado:"+data, Toast.LENGTH_SHORT).show();
                     intent.putExtra("datapedido", data);
+                    //Toast.makeText(context,"rvadapterrojo:"+ data, Toast.LENGTH_SHORT).show();
                     context.startActivity(intent);
                     return true;
                 case R.id.opcion2:
