@@ -145,7 +145,7 @@ public class VerPedidoActivity extends AppCompatActivity {
                             nombre.setId(i);
                             nombre.setTypeface(null, Typeface.BOLD);
                             nombre.setTextColor(0xFF000000);
-
+//push
                                     // What is count for category
                                     TextView cantidad = new TextView(context);
                             cantidad.setPadding(7, 8, 8, 8);
