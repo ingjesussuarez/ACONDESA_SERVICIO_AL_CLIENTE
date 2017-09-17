@@ -2,7 +2,6 @@ package jesu.acondesa_servicio_al_cliente;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -91,7 +89,7 @@ public class VerPedidoActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(String resp) {
-                        Toast.makeText(context, "resp:"+resp, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(context, "resp:"+resp, Toast.LENGTH_SHORT).show();
                         // Every UI object must have a layout parameter
                         int widthContent = RelativeLayout.LayoutParams.WRAP_CONTENT;
                         int heightContent = RelativeLayout.LayoutParams.WRAP_CONTENT;

@@ -51,7 +51,7 @@ public class VerDetallesActivity extends AppCompatActivity {
                 TextView nomtercero = (TextView) findViewById(R.id.nombretercero_cliente);
                 TextView zona = (TextView) findViewById(R.id.zona_cliente);
                 final TextView telefono = (TextView) findViewById(R.id.telefono_cliente);
-                Toast.makeText(this, object.toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this, object.toString(), Toast.LENGTH_SHORT).show();
                 //los id's o indices aqui utilizados deben coincidir con los retornados desde el servicio WEB
                 /*codcliente.setText("idsucursal");
                 nomcliente.setText("nombresucursal");
