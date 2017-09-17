@@ -2,6 +2,8 @@ package jesu.acondesa_servicio_al_cliente;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,7 +34,6 @@ public class VerPedidoActivity extends AppCompatActivity {
     static TextView nombreCliente;
     static TextView consecutivo;
     static TextView fecha;
-    JSONObject pedido = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,15 +62,16 @@ public class VerPedidoActivity extends AppCompatActivity {
     private void cargarPedido(){
         //showProgress(true);
         RequestQueue peticiones = Volley.newRequestQueue(getApplicationContext());
-
+        JSONObject pedido = null;
         String url = "";
+
         try {
             pedido = new JSONObject(datapedido);
             consecutivo.setText(pedido.getString("consecutivo"));
-            fecha.setText(pedido.getString("fecha"));
             nombreCliente.setText(pedido.getString("nombresucursal"));
-            Toast.makeText(this, "id="+pedido.getString("id"), Toast.LENGTH_SHORT).show();
-            url = "http://movilwebacondesa.com/movilweb/app3/MuestraDetalles.php?pedido="+pedido.getString("id");
+            fecha.setText(pedido.getString("fecha"));
+
+            url = "http://movilwebacondesa.com/movilweb/app3/MuestraDetalle.php?consecutivo="+pedido.getString("consecutivo");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -126,7 +128,7 @@ public class VerPedidoActivity extends AppCompatActivity {
                             idproductos[i] = jsonObject.getString("id");
                             cantidades[i] = jsonObject.getString("cantidadp");
                             factores[i] = jsonObject.getString("factorp");
-                            precios[i] = jsonObject.getString("precio");
+                            precios[i] = jsonObject.getString("precio2");
 
 
                                     final TableRow tr = new TableRow(context);
@@ -137,34 +139,39 @@ public class VerPedidoActivity extends AppCompatActivity {
                                     // What is the text view for category name
                                     TextView nombre = new TextView(context);
                                     nombre.setPadding(8, 8, 8, 8);
+                            nombre.setTextSize(10);
                             nombre.setLayoutParams(trLayout);
                             nombre.setText(nombresproductos[i]);
                             nombre.setId(i);
-
+                            nombre.setTypeface(null, Typeface.BOLD);
+                            nombre.setTextColor(0xFF000000);
+//push
                                     // What is count for category
-                            TextView cantidad = new TextView(context);
-                            cantidad.setPadding(8, 8, 8, 8);
+                                    TextView cantidad = new TextView(context);
+                            cantidad.setPadding(7, 8, 8, 8);
                             cantidad.setLayoutParams(trLayout);
+                            //cantidad.setBackgroundColor(Color.WHITE);
                             cantidad.setText(cantidades[i]);
 
                             TextView preciostext = new TextView(context);
-                            nombre.setPadding(8, 8, 8, 8);
-                            nombre.setLayoutParams(trLayout);
-                            nombre.setText(precios[i]);
-                            nombre.setId(i);
+                            preciostext.setPadding(8, 8, 8, 8);
+                            preciostext.setTextSize(10);
+                            preciostext.setLayoutParams(trLayout);
+                            preciostext.setText(precios[i]);
+                            preciostext.setId(i);
+                            preciostext.setTypeface(null, Typeface.BOLD);
+                            preciostext.setTextColor(0xFF000000);
 
                                     // Add name of category
                                     tr.addView(nombre);
 
                                     // Add count for category
                                     tr.addView(cantidad);
-                                    tr.addView(preciostext);
+                            tr.addView(preciostext);
 
 
 
                                     tableLayout.addView(tr);
-                            //tableLayout.refreshDrawableState();
-
 
 
                                     // What happen when user click on table row
@@ -175,7 +182,7 @@ public class VerPedidoActivity extends AppCompatActivity {
                                             Toast.makeText(Main.this, ""+tr.getId(),Toast.LENGTH_SHORT).show();
 
                                             Log.e("TAG", " clicked ID: "+tr.getId());
-                                        }l
+                                        }
                                     });
                                     */
                             }// end for SpecialCategories.length()

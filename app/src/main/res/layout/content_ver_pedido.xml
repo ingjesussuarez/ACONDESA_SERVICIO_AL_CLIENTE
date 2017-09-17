@@ -163,21 +163,21 @@
                     android:id="@+id/textView40"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="Nombre"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView39"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="Cant."
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView41"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text="Precio"
                     android:textStyle="bold" />
             </TableRow>
 
