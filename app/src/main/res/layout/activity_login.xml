@@ -66,7 +66,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:background="@color/colorPrimary"
-                android:text="@string/action_sign_in"
+                android:text="Entrar"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
@@ -97,6 +97,19 @@
                 android:src="@mipmap/acondesa"
                 android:layout_gravity="center_horizontal"
                 android:contentDescription="imagen de logo"/>
+
+            <Button
+                android:id="@+id/button_salir"
+                style="?android:textAppearanceSmall"
+                android:layout_width="246dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                android:text="Salir"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
 
             <TextView
                 android:layout_width="wrap_content"

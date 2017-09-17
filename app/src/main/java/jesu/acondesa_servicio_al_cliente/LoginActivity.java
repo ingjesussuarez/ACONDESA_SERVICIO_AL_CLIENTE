@@ -76,7 +76,13 @@ public class LoginActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
-
+        Button salirButton = (Button) findViewById(R.id.button_salir);
+        salirButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 

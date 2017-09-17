@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -23,7 +24,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +43,8 @@ public class ruta extends Fragment {
     private RVAdapter adapter;
     private String usuario = "";
     private String password = "";
+    private TextView mensaje;
+    private TextView fecha;
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     ProgressBar progress;
@@ -66,6 +71,13 @@ public class ruta extends Fragment {
         password = sharedPreferences.getString("password", "none");
 
         progress = rootView.findViewById(R.id.progressBar);
+        mensaje = (TextView)rootView.findViewById((R.id.rutaMsgView));
+        fecha = (TextView)rootView.findViewById((R.id.rutaFecha));
+        Date date = new Date();
+
+        String dia = String.valueOf(android.text.format.DateFormat.format("EEEE",date));
+        fecha.setText(dia);
+
 
         if(persons.isEmpty())
             llenarRuta();
@@ -118,33 +130,37 @@ public class ruta extends Fragment {
                     int[] visitados = new int[length];
                     int[] hizopedidos = new int[length];
                     //a parte se necesitan idvendedor, numero consecutivo, codigovendedor y nombrevendedor
+                    if(length > 0) {
+                        for (int i = 0; i < length; i++) {
 
-                    for(int i=0;i< jsonArrayPersons.length();i++){
+                            jsonObject = jsonArrayPersons.getJSONObject(i);
 
-                        jsonObject = jsonArrayPersons.getJSONObject(i);
+                            nombres[i] = jsonObject.getString("nombresucursal");
+                            direcciones[i] = jsonObject.getString("direccion");
+                            telefonos[i] = jsonObject.getString("telefono");
+                            idsucursales[i] = jsonObject.getString("idsucursal");
+                            visitados[i] = jsonObject.getInt("visitado");
+                            hizopedidos[i] = jsonObject.getInt("hizopedido");
 
-                        nombres[i] = jsonObject.getString("nombresucursal");
-                        direcciones[i] = jsonObject.getString("direccion");
-                        telefonos[i] = jsonObject.getString("telefono");
-                        idsucursales[i] = jsonObject.getString("idsucursal");
-                        visitados[i] = jsonObject.getInt("visitado");
-                        hizopedidos[i] = jsonObject.getInt("hizopedido");
+                            sharedPreferences = getContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+                            String codvendedor = sharedPreferences.getString("codvendedor", "none");
+                            String idvendedor = sharedPreferences.getString("idvendedor", "none");
 
-                        sharedPreferences = getContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-                        String codvendedor = sharedPreferences.getString("codvendedor", "none");
-                        String idvendedor = sharedPreferences.getString("idvendedor", "none");
+                            String datavendedor = "{\"codvendedor\":\"" + codvendedor + "\",\"idvendedor\":\"" + idvendedor + "\"}";
 
-                        String datavendedor = "{\"codvendedor\":\""+codvendedor+"\",\"idvendedor\":\""+idvendedor+"\"}";
+                            //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente
+                            // ser parseado a un Objeto JavaScript
+                            datas[i] = jsonObject.toString();
 
-                        //armamos un String JSON para ser pasado a la activity registrarpedido y posteriormente
-                        // ser parseado a un Objeto JavaScript
-                        datas[i] = jsonObject.toString();
-
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],
-                                idsucursales[i],datas[i],datavendedor,hizopedidos[i],visitados[i]);
-                        persons.add(personObject);
+                            Person personObject = new Person(nombres[i], direcciones[i], R.mipmap.carrito_compras, telefonos[i],
+                                    idsucursales[i], datas[i], datavendedor, hizopedidos[i], visitados[i]);
+                            persons.add(personObject);
+                        }
+                        initializeAdapter();
+                    }else{
+                        //mostramos un textview con un mensaje que indique que no hay resultados para mostrar
+                        mensaje.setText("No tiene ruta asignada para el día de hoy o ya terminó la ruta del día de hoy");
                     }
-                    initializeAdapter();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

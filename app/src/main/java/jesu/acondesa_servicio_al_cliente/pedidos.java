@@ -98,7 +98,6 @@ public class pedidos extends Fragment {
         final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
         // se muestra error, hay que manejar este evento
 
-
         String url= "http://movilwebacondesa.com/movilweb/app3/MuestraPedidos.php?usuario="+usuario;
 
         progress.setVisibility(View.VISIBLE);
@@ -144,9 +143,6 @@ public class pedidos extends Fragment {
                     Toast.makeText(getContext(), "Error al conectar...", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
-
-
-
                  progress.setVisibility(View.GONE);
 
                 //call initializeAdapter()

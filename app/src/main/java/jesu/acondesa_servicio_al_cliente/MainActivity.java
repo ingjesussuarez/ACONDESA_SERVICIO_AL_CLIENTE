@@ -1,6 +1,7 @@
 package jesu.acondesa_servicio_al_cliente;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     String usuario = "";
     String password = "";
+
     boolean firstTimeSplash = false;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -102,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
@@ -115,11 +120,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        SharedPreferences sharedpreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.clear();
-        editor.commit();
-        MainActivity.this.finish();
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Salir");
+        dialog.setMessage("¿Está seguro de cerrar esta sesión?");
+        dialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SharedPreferences sharedpreferences = getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.clear();
+                editor.commit();
+                MainActivity.this.finish();
+            }
+        });
+        dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i){
+            }
+        });
+        dialog.setCancelable(false);
+        dialog.show();
+
 
     }
 
