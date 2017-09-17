@@ -64,9 +64,14 @@ public class VerPedidoActivity extends AppCompatActivity {
         RequestQueue peticiones = Volley.newRequestQueue(getApplicationContext());
         JSONObject pedido = null;
         String url = "";
+
         try {
             pedido = new JSONObject(datapedido);
-            url = "http://movilwebacondesa.com/movilweb/app3/MuestraDetalles.php?pedido="+pedido.getString("id");
+            consecutivo.setText(pedido.getString("consecutivo"));
+            nombreCliente.setText(pedido.getString("nombresucursal"));
+            fecha.setText(pedido.getString("fecha"));
+
+            url = "http://movilwebacondesa.com/movilweb/app3/MuestraDetalle.php?consecutivo="+pedido.getString("consecutivo");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -123,7 +128,7 @@ public class VerPedidoActivity extends AppCompatActivity {
                             idproductos[i] = jsonObject.getString("id");
                             cantidades[i] = jsonObject.getString("cantidadp");
                             factores[i] = jsonObject.getString("factorp");
-                            precios[i] = jsonObject.getString("precio");
+                            precios[i] = jsonObject.getString("precio2");
 
 
                                     final TableRow tr = new TableRow(context);
@@ -134,7 +139,7 @@ public class VerPedidoActivity extends AppCompatActivity {
                                     // What is the text view for category name
                                     TextView nombre = new TextView(context);
                                     nombre.setPadding(8, 8, 8, 8);
-                            nombre.setTextSize(18);
+                            nombre.setTextSize(10);
                             nombre.setLayoutParams(trLayout);
                             nombre.setText(nombresproductos[i]);
                             nombre.setId(i);
@@ -145,17 +150,17 @@ public class VerPedidoActivity extends AppCompatActivity {
                                     TextView cantidad = new TextView(context);
                             cantidad.setPadding(7, 8, 8, 8);
                             cantidad.setLayoutParams(trLayout);
-                            cantidad.setBackgroundColor(Color.WHITE);
+                            //cantidad.setBackgroundColor(Color.WHITE);
                             cantidad.setText(cantidades[i]);
 
                             TextView preciostext = new TextView(context);
-                            nombre.setPadding(8, 8, 8, 8);
-                            nombre.setTextSize(18);
-                            nombre.setLayoutParams(trLayout);
-                            nombre.setText(precios[i]);
-                            nombre.setId(i);
-                            nombre.setTypeface(null, Typeface.BOLD);
-                            nombre.setTextColor(0xFF000000);
+                            preciostext.setPadding(8, 8, 8, 8);
+                            preciostext.setTextSize(10);
+                            preciostext.setLayoutParams(trLayout);
+                            preciostext.setText(precios[i]);
+                            preciostext.setId(i);
+                            preciostext.setTypeface(null, Typeface.BOLD);
+                            preciostext.setTextColor(0xFF000000);
 
                                     // Add name of category
                                     tr.addView(nombre);
