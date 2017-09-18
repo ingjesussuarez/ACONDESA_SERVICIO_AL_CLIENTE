@@ -151,21 +151,17 @@ public class LoginActivity extends AppCompatActivity {
                         public void onResponse(JSONObject resp) {
                             showProgress(false);
                             try {
-                                String validation = resp.getString("validacion");
-                                String nombvendedor = resp.getString("nomvendedor");
-                                String idvendedor = resp.getString("idvendedor");
-                                String codvendedor = resp.getString("codigo");
-                                String idzona = resp.getString("idzona");
+
                                 //Toast.makeText(LoginActivity.this, validation, Toast.LENGTH_LONG).show();
-                                if(validation.equals("ok")){
+                                if(resp.getString("validacion").equals("ok")){
                                     //abrimos el editor de sesiones y guardamos las credenciales en la sesion
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("usuario",usuario); // insertando el usuario
                                     editor.putString("password",password); // insertando la clave
-                                    editor.putString("nomvendedor",nombvendedor); // insertando el nombre del vendedor
-                                    editor.putString("idvendedor",idvendedor); // insertando el id del vendedor
-                                    editor.putString("codvendedor",codvendedor); // insertando el codigo del vendedor
-                                    editor.putString("idzona",idzona); // insertando el codigo del vendedor
+                                    editor.putString("nomvendedor",resp.getString("nomvendedor")); // insertando el nombre del vendedor
+                                    editor.putString("idvendedor",resp.getString("idvendedor")); // insertando el id del vendedor
+                                    editor.putString("codvendedor",resp.getString("codigo")); // insertando el codigo del vendedor
+                                    editor.putString("idzona",resp.getString("idzona")); // insertando el codigo del vendedor
                                     editor.commit(); // guardar datos
                                     mPasswordView.setText("");
                                     //mUserView.setText("");

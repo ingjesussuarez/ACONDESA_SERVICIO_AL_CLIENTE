@@ -234,15 +234,15 @@ public class MainActivity extends AppCompatActivity {
             sharedPreferences = getApplicationContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
             hayPedidosPendientes = sharedPreferences.getString("hayPedidosPendientes", "no");
             switch (position) {
-                case 0: if(ru == null)
+                case 0: //if(ru == null)
                             ru = new ruta();
                         return  ru;
-                case 1: if(pe == null)
+                case 1: //if(pe == null)
                             pe = new pedidos();
-                        if(hayPedidosPendientes == "si")
-                            pe.llenarpedidos();
+                        //if(hayPedidosPendientes == "si")
+                          //  pe.llenarpedidos();
                         return pe;
-                case 2: if(re == null)
+                case 2: //if(re == null)
                             re = new resumen();
                         return re;
             }

@@ -75,7 +75,7 @@ public class ruta extends Fragment {
         fecha = (TextView)rootView.findViewById((R.id.rutaFecha));
         Date date = new Date();
 
-        String dia = String.valueOf(android.text.format.DateFormat.format("EEEE",date));
+        String dia = String.valueOf(android.text.format.DateFormat.format("EEEE dd 'de' MMMM 'de' yyyy",date));
         fecha.setText(dia);
 
 
@@ -131,6 +131,8 @@ public class ruta extends Fragment {
                     int[] hizopedidos = new int[length];
                     //a parte se necesitan idvendedor, numero consecutivo, codigovendedor y nombrevendedor
                     if(length > 0) {
+                        mensaje.setVisibility(View.GONE);
+
                         for (int i = 0; i < length; i++) {
 
                             jsonObject = jsonArrayPersons.getJSONObject(i);
@@ -160,6 +162,7 @@ public class ruta extends Fragment {
                     }else{
                         //mostramos un textview con un mensaje que indique que no hay resultados para mostrar
                         mensaje.setText("No tiene ruta asignada para el día de hoy o ya terminó la ruta del día de hoy");
+                        mensaje.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

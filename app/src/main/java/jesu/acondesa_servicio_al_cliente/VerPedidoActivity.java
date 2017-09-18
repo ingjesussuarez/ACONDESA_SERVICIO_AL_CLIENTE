@@ -2,7 +2,6 @@ package jesu.acondesa_servicio_al_cliente;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -136,29 +135,23 @@ public class VerPedidoActivity extends AppCompatActivity {
 
                                     // What is the text view for category name
                                     TextView nombre = new TextView(context);
-                                    nombre.setPadding(8, 8, 8, 8);
+
                             nombre.setTextSize(10);
                             nombre.setLayoutParams(trLayout);
                             nombre.setText(nombresproductos[i]);
                             nombre.setId(i);
-                            nombre.setTypeface(null, Typeface.BOLD);
-                            nombre.setTextColor(0xFF000000);
-//push
+
                                     // What is count for category
                                     TextView cantidad = new TextView(context);
-                            cantidad.setPadding(7, 8, 8, 8);
                             cantidad.setLayoutParams(trLayout);
                             //cantidad.setBackgroundColor(Color.WHITE);
                             cantidad.setText(cantidades[i]);
 
                             TextView preciostext = new TextView(context);
-                            preciostext.setPadding(8, 8, 8, 8);
                             preciostext.setTextSize(10);
                             preciostext.setLayoutParams(trLayout);
                             preciostext.setText(precios[i]);
                             preciostext.setId(i);
-                            preciostext.setTypeface(null, Typeface.BOLD);
-                            preciostext.setTextColor(0xFF000000);
 
                                     // Add name of category
                                     tr.addView(nombre);

@@ -22,13 +22,14 @@
         android:visibility="gone" />
 
 
-
-
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="356dp"
-        android:layout_weight="0.52">
+        android:layout_height="match_parent"
+        android:layout_weight="0.52"
+        android:fillViewport="true"
+        android:scrollIndicators="none"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -77,26 +78,26 @@
             </android.support.design.widget.TextInputLayout>
 
             <TextView
+                android:id="@+id/textView5"
                 android:layout_width="227dp"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/textView5" />
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:id="@+id/imageView"
-                android:src="@mipmap/movilwe"
                 android:layout_gravity="center_horizontal"
-                android:contentDescription="imagen de logo"/>
+                android:contentDescription="imagen de logo"
+                android:src="@mipmap/movilwe" />
 
             <ImageView
+                android:id="@+id/imageView2"
                 android:layout_width="341dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageView2"
-                android:src="@mipmap/acondesa"
                 android:layout_gravity="center_horizontal"
-                android:contentDescription="imagen de logo"/>
+                android:contentDescription="imagen de logo"
+                android:src="@mipmap/acondesa" />
 
             <Button
                 android:id="@+id/button_salir"
@@ -112,11 +113,11 @@
 
 
             <TextView
+                android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/textView6"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

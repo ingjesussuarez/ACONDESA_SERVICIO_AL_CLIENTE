@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +45,9 @@ public class pedidos extends Fragment {
     private String usuario = "";
     private String password = "";
     private TextView numPedidos;
+    private TextView fecha;
+    private TextView msgView;
+    private LinearLayout layoutNumPed;
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
     SharedPreferences sharedPreferences; //contenedor de sesiones y/o variables compartidas
     ProgressBar progress;
@@ -60,6 +65,13 @@ public class pedidos extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_pedidos, container, false);
         rv= rootView.findViewById(R.id.rv2);
         numPedidos = rootView.findViewById(R.id.num_pedidos);
+        msgView = rootView.findViewById(R.id.pedidosMsgView);
+        fecha = rootView.findViewById(R.id.fechapedidos);
+        layoutNumPed = rootView.findViewById(R.id.layoutNumeroPedidos);
+        Date date = new Date();
+        String dia = String.valueOf(android.text.format.DateFormat.format("EEEE dd 'de' MMMM 'de' yyyy",date));
+        fecha.setText(dia);
+
 //pedidos
         rv.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -115,29 +127,38 @@ public class pedidos extends Fragment {
                 try {
 
                     JSONArray jsonArraypedidosList = new JSONArray(JSONresponse);
-
-                    String[] nombres = new String[jsonArraypedidosList.length()];
-                    String[] direcciones = new String[jsonArraypedidosList.length()];
-                    String[] telefonos = new String[jsonArraypedidosList.length()];
-                    String[] ids = new String[jsonArraypedidosList.length()];
-                    String[] datas = new String[jsonArraypedidosList.length()];
                     numeroPedidos = jsonArraypedidosList.length();
+                    String[] nombres = new String[numeroPedidos];
+                    String[] direcciones = new String[numeroPedidos];
+                    String[] telefonos = new String[numeroPedidos];
+                    String[] ids = new String[numeroPedidos];
+                    String[] datas = new String[numeroPedidos];
+
                     numPedidos.setText(String.valueOf(numeroPedidos));
 
-                    for(int i=0;i< numeroPedidos;i++){
 
-                        jsonObject = jsonArraypedidosList.getJSONObject(i);
+                    if(numeroPedidos > 0) {
+                        msgView.setVisibility(View.GONE);
+                        layoutNumPed.setVisibility(View.VISIBLE);
+                        for (int i = 0; i < numeroPedidos; i++) {
 
-                        nombres[i] = jsonObject.getString("nombresucursal");
-                        direcciones[i] = jsonObject.getString("consecutivo");
-                        telefonos[i] = jsonObject.getString("fecha");
-                        ids[i] = jsonObject.getString("id");
-                        datas[i] = jsonObject.toString();
+                            jsonObject = jsonArraypedidosList.getJSONObject(i);
 
-                        Person personObject =  new Person(nombres[i],direcciones[i],R.mipmap.carrito_compras,telefonos[i],ids[i],datas[i],"",1,1);
-                        pedidosList.add(personObject);
+                            nombres[i] = jsonObject.getString("nombresucursal");
+                            direcciones[i] = jsonObject.getString("consecutivo");
+                            telefonos[i] = jsonObject.getString("fecha");
+                            ids[i] = jsonObject.getString("id");
+                            datas[i] = jsonObject.toString();
+
+                            Person personObject = new Person(nombres[i], direcciones[i], R.mipmap.carrito_compras, telefonos[i], ids[i], datas[i], "", 1, 1);
+                            pedidosList.add(personObject);
+                        }
+                        initializeAdapter();
+                    }else{
+                        msgView.setText("Aun no se han realizado pedidos el día de hoy");
+                        msgView.setVisibility(View.VISIBLE);
+                        layoutNumPed.setVisibility(View.GONE);
                     }
-                    initializeAdapter();
                 } catch (JSONException e) {
                     progress.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Error al conectar...", Toast.LENGTH_LONG).show();
