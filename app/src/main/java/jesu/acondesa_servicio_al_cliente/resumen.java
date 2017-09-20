@@ -31,6 +31,8 @@ import org.json.JSONObject;
  */
 public class resumen extends Fragment {
     public static final String MIS_PREFERENCIAS = "myPref"; // constante usada para guardar sesiones y/o variables compartidas
+    SharedPreferences sharedPreferences;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,13 +51,12 @@ public class resumen extends Fragment {
         // hay que manejar este evento para permitir al usuario reintentar la conexion manualmente
         final int MAX_RETRYS_CONECTION = 3; //numero maximo de reintentos de conexion, despues de superar el numero de intentos,
         // se muestra error, hay que manejar este evento
-        final SharedPreferences[] sharedPreferences = new SharedPreferences[1];
-        sharedPreferences[0] = this.getContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
-        final String[] usuario = {sharedPreferences[0].getString("usuario", "none")};
-        final String[] idvendedor = {sharedPreferences[0].getString("idvendedor", "none")};
+        sharedPreferences = this.getContext().getSharedPreferences(MIS_PREFERENCIAS, Context.MODE_PRIVATE);
+        String usuario = sharedPreferences.getString("usuario", "none");
+        String idvendedor = sharedPreferences.getString("idvendedor", "none");
 
-        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraResumen.php?usuario="+usuario+"&idvendedor="+idvendedor;
-        //Toast.makeText(this.getContext(), url, Toast.LENGTH_LONG).show();
+        String url= "http://movilwebacondesa.com/movilweb/app3/MuestraResumen.php?usuario="+usuario;
+        Toast.makeText(this.getContext(), url, Toast.LENGTH_LONG).show();
 
 //        progress.setVisibility(View.VISIBLE);
 
@@ -67,21 +68,21 @@ public class resumen extends Fragment {
                 try {
                     JSONObject jsonObject = new JSONObject(JSONresponse);
                     TextView aux = (TextView)view.findViewById(R.id.visitasProgramadas);
-                    aux.setText(jsonObject.getInt("visitasProgramadas"));
+                    aux.setText(String.valueOf(jsonObject.getInt("visitasProgramadas")));
                     aux = (TextView)view.findViewById(R.id.visitasRealizadas);
-                    aux.setText(jsonObject.getInt("visitasRealizadas"));
+                    aux.setText(String.valueOf(jsonObject.getInt("visitasRealizadas")));
                     aux = (TextView)view.findViewById(R.id.visitasEfectivas);
-                    aux.setText(jsonObject.getInt("visitasEfectivas"));
+                    aux.setText(String.valueOf(jsonObject.getInt("visitasEfectivas")));
                     aux = (TextView)view.findViewById(R.id.visitasPendientes);
-                    aux.setText(jsonObject.getInt("visitasPendientes"));
-                    aux = (TextView)view.findViewById(R.id.kilos);
-                    aux.setText(String.valueOf(jsonObject.getDouble("kilos")));
+                    aux.setText(String.valueOf(jsonObject.getInt("visitasPendientes")));
+                    //aux = (TextView)view.findViewById(R.id.kilos);
+                    //aux.setText(String.valueOf(jsonObject.getDouble("kilos")));
                     aux = (TextView)view.findViewById(R.id.efectividadProgramadas);
-                    aux.setText(String.valueOf(jsonObject.getDouble("efectividadProgramadas")+" %"));
+                    aux.setText(String.valueOf(jsonObject.getString("efectividadProgramadas")+" %"));
                     aux = (TextView)view.findViewById(R.id.eficienciaVisitas);
-                    aux.setText(String.valueOf(jsonObject.getDouble("eficienciaVisitas")+" %"));
+                    aux.setText(String.valueOf(jsonObject.getString("eficienciaVisitas")+" %"));
                     aux = (TextView)view.findViewById(R.id.efectividadVisitas);
-                    aux.setText(String.valueOf(jsonObject.getDouble("efectividadVisitas")+" %"));
+                    aux.setText(String.valueOf(jsonObject.getString("efectividadVisitas")+" %"));
 
                 }catch(JSONException e){
 
