@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.commit(); // guardar datos
                                     mPasswordView.setText("");
                                     //mUserView.setText("");
-                                    Intent MainActivity = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.MainActivity.class);
+                                    Intent MainActivity = new Intent(getApplicationContext(), jesu.acondesa_servicio_al_cliente.Usuario.class);
                                     startActivity(MainActivity);
 
                                     Toast.makeText(LoginActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();

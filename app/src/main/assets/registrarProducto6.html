@@ -251,7 +251,7 @@ function calcularTotal(){
 	//precio total por producto
 
     var precioTotal = precio*factor*cantidad;
-    precioTotal = precioTotal.toFixed(2);
+    precioTotal = precioTotal.toFixed(0);
     if(precioTotal == null || isNaN(precioTotal) || precioTotal == "NaN"){
         precioTotal = 0;
     } 
@@ -284,7 +284,7 @@ var id;
         
 
     }); 
-    $("#totalpedido").html('$ '+preciopedido.toFixed(2));
+    $("#totalpedido").html('$ '+preciopedido.toFixed(0));
 }
 function comprobarProductos(){
 	var contador = 0;
@@ -492,7 +492,7 @@ function llenarSelect(){
    var total;
    for(var i in productos) {
     total = parseFloat(productos[i].precio*productos[i].factor);
-    optionsHTML += '<option value="'+productos[i].id+'" precio="'+productos[i].precio+'" factor="'+productos[i].factor+'" iva="'+productos[i].iva+'" description="'+productos[i].abreviado+'" > '+productos[i].nomproducto+' $'+total.toFixed(2)+'</option>';  // (o el campo que necesites)
+    optionsHTML += '<option value="'+productos[i].id+'" precio="'+productos[i].precio+'" factor="'+productos[i].factor+'" iva="'+productos[i].iva+'" description="'+productos[i].abreviado+'" > '+productos[i].nomproducto+' $'+total.toFixed(0)+'</option>';  // (o el campo que necesites)
 
 } 
 
@@ -538,7 +538,7 @@ select.click();
     //precio total por producto
 
     var precioTotal = precio*factor*cantidad;
-    precioTotal = precioTotal.toFixed(2);
+    precioTotal = precioTotal.toFixed(0);
     if(precioTotal == null || isNaN(precioTotal) || precioTotal == "NaN"){
         precioTotal = 0;
     } 

@@ -71,9 +71,13 @@
         </activity>
         <activity
             android:name=".VerPedidoActivity"
-            android:label="Detalles de pedido"
             android:configChanges="screenSize|orientation"
+            android:label="Detalles de pedido"
             android:parentActivityName=".pedidos"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Usuario"
+            android:label="@string/title_activity_usuario"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ACONDESA_SERVICIO_AL_CLIENTE.iml" filepath="$PROJECT_DIR$/ACONDESA_SERVICIO_AL_CLIENTE.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/movilweb.iml" filepath="$PROJECT_DIR$/movilweb.iml" />
     </modules>
   </component>
 </project>
