@@ -6,7 +6,7 @@
         <title></title>
 
         <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=4.0" />
 
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
 
@@ -169,10 +169,10 @@ body.loading .modal2 {
             <table class="table  table-hover table-sortable" id="tab_productos" >
                 <thead>
                     <tr >
-                        <th class="text-center ">
+                        <th class="text-center "style="padding-right: 0px">
                             Producto
                         </th>
-                        <th class="text-center ">
+                        <th class="text-center " style="padding-left: 0px;padding-right: 1px">
                             Cant
                         </th>
                         <th class="text-center ">
@@ -286,6 +286,7 @@ var id;
     }); 
     $("#totalpedido").html('$ '+preciopedido.toFixed(0));
 }
+
 function comprobarProductos(){
 	var contador = 0;
 	var cantidad;
@@ -549,10 +550,10 @@ select.click();
     
         //formar la nueva row
         var tr2 = '<tr id="addr'+newid+'" data-id="'+newid+'" precio="'+precio+'" cantidad="'+cantidad+'" idproducto="'+idproducto+'" preciototal="'+precioTotal+'" style="border-bottom:1px solid #ddd ">'+
-        '<td style="font-size:10px;padding:0px;"><b>'+nombreproducto+'</b></td>'+
-        '<td style="font-size:10px;width:30px;text-align:right;">'+cantidad+'</td>'+
-        '<td style="font-size:10px;width:60px;text-align: right;">$'+precioTotal+'</td>'+
-        '<td data-name="del" style="width:11px;text-align:right;"><button name="del" class="btn btn-danger glyphicon glyphicon-remove row-remove" id="remove'+newid+'" style="border-radius: 25px;font-size: 8px; padding: 4px 6px;"></button></td>'+'</tr>';
+        '<td style="font-size:2.9vw;padding:0px;text-align:center;"><b>'+nombreproducto+'</b></td>'+
+        '<td style="font-size:3.2vw;width:2px;text-align:right;">'+cantidad+'</td>'+
+        '<td style="font-size:3.2vw;width:50px;text-align: right;">$'+precioTotal+'</td>'+
+        '<td data-name="del" style="width:11px;padding:0px;text-align:right;"><button name="del" class="btn btn-danger glyphicon glyphicon-remove row-remove" id="remove'+newid+'" style="border-radius: 25px;font-size: 8px; padding: 4px 6px;"></button></td>'+'</tr>';
         
         /*
         
